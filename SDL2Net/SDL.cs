@@ -17,7 +17,7 @@ namespace SDL2Net
         Everything = Timer | Audio | Video | Joystick | Haptic | GameController | Events | Sensor
     }
 
-    public static class SDL
+    public static partial class SDL
     {
         private const string SDL2Lib = "SDL2.framework/SDL2";
 

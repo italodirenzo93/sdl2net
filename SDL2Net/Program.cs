@@ -11,6 +11,7 @@ namespace SDL2Net
             if (init != 0)
             {
                 Console.Error.WriteLine($"SDL_Init failed... returned {init}.");
+                Console.Error.WriteLine($"SDL error: {SDL_GetError()}");
                 return;
             }
             Console.WriteLine("Hello World!");
