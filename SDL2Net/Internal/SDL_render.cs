@@ -39,6 +39,9 @@ namespace SDL2Net.Internal
         public const byte SDL_ALPHA_TRANSPARENT = 0;
 
         [DllImport(SDL2Lib)]
+        public static extern int SDL_GetRenderDrawColor(IntPtr renderer, ref byte r, ref byte g, ref byte b, ref byte a);
+
+        [DllImport(SDL2Lib)]
         public static extern int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
     }
 }

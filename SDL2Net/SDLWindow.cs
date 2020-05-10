@@ -6,12 +6,12 @@ namespace SDL2Net
 {
     public class SDLWindow : IDisposable
     {
-        private readonly IntPtr _window;
+        internal readonly IntPtr Window;
 
         public SDLWindow(string title, int x, int y, int w, int h)
         {
-            _window = SDL_CreateWindow(title, x, y, w, h, 0);
-            if (_window == IntPtr.Zero)
+            Window = SDL_CreateWindow(title, x, y, w, h, 0);
+            if (Window == IntPtr.Zero)
             {
                 throw new SDLException();
             }
@@ -23,27 +23,27 @@ namespace SDL2Net
 
         public string Title
         {
-            get => Marshal.PtrToStringAnsi(SDL_GetWindowTitle(_window));
-            set => SDL_SetWindowTitle(_window, value);
+            get => Marshal.PtrToStringAnsi(SDL_GetWindowTitle(Window));
+            set => SDL_SetWindowTitle(Window, value);
         }
 
         public void Show()
         {
             if (IsVisible) return;
-            SDL_ShowWindow(_window);
+            SDL_ShowWindow(Window);
             IsVisible = true;
         }
 
         public void Hide()
         {
             if (!IsVisible) return;
-            SDL_HideWindow(_window);
+            SDL_HideWindow(Window);
             IsVisible = false;
         }
 
         public void Dispose()
         {
-            SDL_DestroyWindow(_window);
+            SDL_DestroyWindow(Window);
         }
     }
 }
