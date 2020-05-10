@@ -4,42 +4,51 @@ using System.Runtime.InteropServices;
 namespace SDL2Net
 {
     [Flags]
-    public enum SDLInit : uint
+    public enum SDL_Init : uint
     {
-        Timer = 0x00000001u,
-        Audio = 0x00000010u,
-        Video = 0x00000010u,
-        Joystick = 0x00000200u,
-        Haptic = 0x00001000u,
-        GameController = 0x00002000u,
-        Events = 0x00004000u,
-        Sensor = 0x00008000u,
-        Everything = Timer | Audio | Video | Joystick | Haptic | GameController | Events | Sensor
+        SDL_INIT_TIMER = 0x00000001u,
+        SDL_INIT_AUDIO = 0x00000010u,
+        SDL_INIT_VIDEO = 0x00000020u,
+
+        /**< SDL_INIT_VIDEO implies SDL_INIT_EVENTS */
+        SDL_INIT_JOYSTICK = 0x00000200u,
+
+        /**< SDL_INIT_JOYSTICK implies SDL_INIT_EVENTS */
+        SDL_INIT_HAPTIC = 0x00001000u,
+        SDL_INIT_GAMECONTROLLER = 0x00002000u,
+
+        /**< SDL_INIT_GAMECONTROLLER implies SDL_INIT_JOYSTICK */
+        SDL_INIT_EVENTS = 0x00004000u,
+        SDL_INIT_SENSOR = 0x00008000u,
+
+        SDL_INIT_EVERYTHING = SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC |
+                              SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_SENSOR
     }
 
     public static partial class SDL
     {
-        private const string SDL2Lib = "SDL2.framework/SDL2";
+        //private const string SDL2Lib = "SDL2.framework/SDL2";
+        private const string SDL2Lib = "libsdl2";
 
         public delegate int MainFunction(int argc, string[] argv);
 
         [DllImport(SDL2Lib)]
-        public static extern int SDL_Init(SDLInit flags);
+        public static extern int SDL_Init(SDL_Init flags);
 
         [DllImport(SDL2Lib)]
-        public static extern int SDL_InitSubSystem(SDLInit flags);
+        public static extern int SDL_InitSubSystem(SDL_Init flags);
 
         [DllImport(SDL2Lib)]
         public static extern void SDL_Quit();
 
         [DllImport(SDL2Lib)]
-        public static extern void SDL_QuitSubSystem(SDLInit flags);
+        public static extern void SDL_QuitSubSystem(SDL_Init flags);
 
         [DllImport(SDL2Lib)]
         public static extern void SDL_SetMainReady();
 
         [DllImport(SDL2Lib)]
-        public static extern SDLInit SDL_WasInit(SDLInit flags);
+        public static extern SDL_Init SDL_WasInit(SDL_Init flags);
 
         [DllImport(SDL2Lib)]
         public static extern int SDL_WinRTRunApp(MainFunction mainFunction, IntPtr reserved);

@@ -9,6 +9,6 @@ namespace SDL2Net
         public static extern void SDL_ClearError();
 
         [DllImport(SDL2Lib)]
-        public static extern string SDL_GetError();
+        public static extern IntPtr SDL_GetError();
     }
 }
