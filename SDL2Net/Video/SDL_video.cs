@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net
 {
     [Flags]
-    public enum SDL_WindowFlags : uint
+    internal enum SDL_WindowFlags : uint
     {
         SDL_WINDOW_FULLSCREEN = 0x00000001,
 
@@ -68,16 +68,37 @@ namespace SDL2Net
         /**< window should be treated as a popup menu */
         SDL_WINDOW_VULKAN = 0x10000000 /**< window usable for Vulkan surface */
     }
-    
-    public static partial class SDL
+
+    [Flags]
+    internal enum SDL_MessageBoxFlags : uint
+    {
+        SDL_MESSAGEBOX_ERROR = 0x00000010,
+
+        /**< error dialog */
+        SDL_MESSAGEBOX_WARNING = 0x00000020,
+
+        /**< warning dialog */
+        SDL_MESSAGEBOX_INFORMATION = 0x00000040,
+
+        /**< informational dialog */
+        SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT = 0x00000080,
+
+        /**< buttons placed left to right */
+        SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT = 0x00000100 /**< buttons placed right to left */
+    }
+
+    internal static partial class SDL
     {
         public const int SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000;
         public const int SDL_WINDOWPOS_UNDEFINED = SDL_WINDOWPOS_UNDEFINED_MASK | 0;
-        
+
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern IntPtr SDL_CreateWindow(string title, int x, int y, int w, int h, SDL_WindowFlags flags);
 
         [DllImport(SDL2Lib)]
         public static extern void SDL_DestroyWindow(IntPtr window);
+
+        [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
+        public static extern int SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags flags, string title, string message, IntPtr window);
     }
 }

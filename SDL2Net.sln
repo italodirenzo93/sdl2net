@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net", "SDL2Net\SDL2Net.csproj", "{10D139B3-93F8-412D-A16D-1E26E2C39FBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net.Tests", "SDL2Net.Tests\SDL2Net.Tests.csproj", "{3C25AA26-EA2D-4E7F-8824-6835B7638FC9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,9 +12,5 @@ Global
 		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C25AA26-EA2D-4E7F-8824-6835B7638FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C25AA26-EA2D-4E7F-8824-6835B7638FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C25AA26-EA2D-4E7F-8824-6835B7638FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C25AA26-EA2D-4E7F-8824-6835B7638FC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

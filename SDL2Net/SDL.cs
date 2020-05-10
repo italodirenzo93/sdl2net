@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net
 {
     [Flags]
-    public enum SDL_Init : uint
+    internal enum SDL_Init : uint
     {
         SDL_INIT_TIMER = 0x00000001u,
         SDL_INIT_AUDIO = 0x00000010u,
@@ -25,10 +25,14 @@ namespace SDL2Net
                               SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_SENSOR
     }
 
-    public static partial class SDL
+    internal static partial class SDL
     {
+#if MACOS
         //private const string SDL2Lib = "SDL2.framework/SDL2";
         private const string SDL2Lib = "libsdl2";
+#else
+        #error Platform not defined
+#endif
 
         public delegate int MainFunction(int argc, string[] argv);
 
