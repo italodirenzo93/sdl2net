@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net.Internal
 {
     [Flags]
-    public enum SDL_RendererFlags : uint
+    internal enum SDL_RendererFlags : uint
     {
         SDL_RENDERER_SOFTWARE = 0x00000001,
 
@@ -21,7 +21,7 @@ namespace SDL2Net.Internal
                                                      rendering to texture */
     }
 
-    public static partial class SDL
+    internal static partial class SDL
     {
         [DllImport(SDL2Lib)]
         public static extern IntPtr SDL_CreateRenderer(IntPtr window, int index, SDL_RendererFlags flags);

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net.Internal
 {
     [Flags]
-    public enum SDL_EventType : uint
+    internal enum SDL_EventType : uint
     {
         SDL_FIRSTEVENT = 0,     /**< Unused (do not remove) */
 
@@ -118,7 +118,7 @@ namespace SDL2Net.Internal
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 56)]
-    public struct SDL_Event
+    internal struct SDL_Event
     {
         [FieldOffset(0)]
         public SDL_EventType type;
@@ -129,14 +129,14 @@ namespace SDL2Net.Internal
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_CommonEvent
+    internal struct SDL_CommonEvent
     {
         public SDL_EventType type;
         public uint timestamp;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SDL_WindowEvent
+    internal struct SDL_WindowEvent
     {
         public SDL_EventType type;
         public uint timestamp;
@@ -146,7 +146,7 @@ namespace SDL2Net.Internal
         public int data2;
     }
 
-    public static partial class SDL
+    internal static partial class SDL
     {
         [DllImport(SDL2Lib)]
         public static extern int SDL_PollEvent(ref SDL_Event @event);

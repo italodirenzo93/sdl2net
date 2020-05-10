@@ -1,7 +1,7 @@
 using System;
 using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
-using static SDL2Net.Internal.SDL_Init;
+using static SDL2Net.Internal.SDL_InitFlags;
 
 namespace SDL2Net
 {

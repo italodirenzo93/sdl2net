@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net.Internal
 {
     [Flags]
-    public enum SDL_WindowFlags : uint
+    internal enum SDL_WindowFlags : uint
     {
         SDL_WINDOW_FULLSCREEN = 0x00000001,
 
@@ -70,7 +70,7 @@ namespace SDL2Net.Internal
     }
 
     [Flags]
-    public enum SDL_MessageBoxFlags : uint
+    internal enum SDL_MessageBoxFlags : uint
     {
         SDL_MESSAGEBOX_ERROR = 0x00000010,
 
@@ -87,7 +87,7 @@ namespace SDL2Net.Internal
         SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT = 0x00000100 /**< buttons placed right to left */
     }
 
-    public static partial class SDL
+    internal static partial class SDL
     {
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern IntPtr SDL_CreateWindow(string title, int x, int y, int w, int h, SDL_WindowFlags flags);
@@ -106,6 +106,18 @@ namespace SDL2Net.Internal
         
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern void SDL_SetWindowTitle(IntPtr window, string title);
+
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_GetWindowPosition(IntPtr window, ref int x, ref int y);
+
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_SetWindowPosition(IntPtr window, int x, int y);
+        
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_GetWindowSize(IntPtr window, ref int x, ref int y);
+
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_SetWindowSize(IntPtr window, int x, int y);
 
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern int SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags flags, string title, string message, IntPtr window);

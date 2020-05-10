@@ -7,12 +7,12 @@ namespace SDL2Net
 {
     public class SDLRenderer : IDisposable
     {
-        internal readonly IntPtr Renderer;
+        internal readonly IntPtr RendererPtr;
 
         public SDLRenderer(SDLWindow window)
         {
-            Renderer = SDL_CreateRenderer(window.Window, -1, SDL_RENDERER_ACCELERATED);
-            if (Renderer == IntPtr.Zero)
+            RendererPtr = SDL_CreateRenderer(window.WindowPtr, -1, SDL_RENDERER_ACCELERATED);
+            if (RendererPtr == IntPtr.Zero)
             {
                 throw new SDLException();
             }
@@ -23,28 +23,28 @@ namespace SDL2Net
             get
             {
                 byte r = 0, g = 0, b = 0, a = 0;
-                SDL_GetRenderDrawColor(Renderer, ref r, ref g, ref b, ref a);
+                SDL_GetRenderDrawColor(RendererPtr, ref r, ref g, ref b, ref a);
                 return Color.FromArgb(a, r, g, b);
             }
             set
             {
-                SDL_SetRenderDrawColor(Renderer, value.R, value.G, value.B, value.A);
+                SDL_SetRenderDrawColor(RendererPtr, value.R, value.G, value.B, value.A);
             }
         }
 
         public void Dispose()
         {
-            SDL_DestroyRenderer(Renderer);
+            SDL_DestroyRenderer(RendererPtr);
         }
 
         public void Clear()
         {
-            SDL_RenderClear(Renderer);
+            SDL_RenderClear(RendererPtr);
         }
 
         public void Present()
         {
-            SDL_RenderPresent(Renderer);
+            SDL_RenderPresent(RendererPtr);
         }
     }
 }
