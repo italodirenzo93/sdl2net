@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SDL2Net
+namespace SDL2Net.Internal
 {
     [Flags]
     public enum SDL_WindowFlags : uint
@@ -89,9 +89,6 @@ namespace SDL2Net
 
     public static partial class SDL
     {
-        public const int SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000;
-        public const int SDL_WINDOWPOS_UNDEFINED = SDL_WINDOWPOS_UNDEFINED_MASK | 0;
-
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern IntPtr SDL_CreateWindow(string title, int x, int y, int w, int h, SDL_WindowFlags flags);
 

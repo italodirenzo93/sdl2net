@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SDL2Net
+namespace SDL2Net.Internal
 {
     [Flags]
     public enum SDL_RendererFlags : uint
@@ -28,5 +28,17 @@ namespace SDL2Net
 
         [DllImport(SDL2Lib)]
         public static extern void SDL_DestroyRenderer(IntPtr renderer);
+
+        [DllImport(SDL2Lib)]
+        public static extern int SDL_RenderClear(IntPtr renderer);
+
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_RenderPresent(IntPtr renderer);
+
+        public const byte SDL_ALPHA_OPAQUE = 255;
+        public const byte SDL_ALPHA_TRANSPARENT = 0;
+
+        [DllImport(SDL2Lib)]
+        public static extern int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
     }
 }
