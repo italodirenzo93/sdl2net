@@ -18,7 +18,13 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
       <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-      <DefineConstants>TRACE;MACOS</DefineConstants>
+      <DefineConstants>TRACE;WINDOWS</DefineConstants>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="SDL2.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 
 </Project>

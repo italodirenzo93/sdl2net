@@ -4,4 +4,6 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 
+.vs/
+SDL2.dll
 SDL2Net/SDL2.framework/*

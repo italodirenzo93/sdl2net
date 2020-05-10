@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SDL2Net
+namespace SDL2Net.Internal
 {
     public static partial class SDL
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SDL2Net
+namespace SDL2Net.Internal
 {
     [Flags]
     public enum SDL_Init : uint
@@ -28,7 +28,7 @@ namespace SDL2Net
     public static partial class SDL
     {
 #if WINDOWS
-        private const string SDL2Lib = "SDL.dll";
+        private const string SDL2Lib = "SDL2.dll";
 #elif MACOS
         //private const string SDL2Lib = "SDL2.framework/SDL2";
         private const string SDL2Lib = "libsdl2";
