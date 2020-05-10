@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Net
 {
-    internal static partial class SDL
+    public static partial class SDL
     {
         [DllImport(SDL2Lib)]
         public static extern void SDL_ClearError();

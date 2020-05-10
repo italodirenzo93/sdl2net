@@ -6,7 +6,7 @@ using static SDL2Net.SDL_Init;
 using static SDL2Net.SDL_WindowFlags;
 using static SDL2Net.SDL_RendererFlags;
 
-namespace SDL2Net
+namespace SDL2Net.TestApp
 {
     class Program
     {

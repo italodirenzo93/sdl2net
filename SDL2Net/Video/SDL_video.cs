@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net
 {
     [Flags]
-    internal enum SDL_WindowFlags : uint
+    public enum SDL_WindowFlags : uint
     {
         SDL_WINDOW_FULLSCREEN = 0x00000001,
 
@@ -70,7 +70,7 @@ namespace SDL2Net
     }
 
     [Flags]
-    internal enum SDL_MessageBoxFlags : uint
+    public enum SDL_MessageBoxFlags : uint
     {
         SDL_MESSAGEBOX_ERROR = 0x00000010,
 
@@ -87,7 +87,7 @@ namespace SDL2Net
         SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT = 0x00000100 /**< buttons placed right to left */
     }
 
-    internal static partial class SDL
+    public static partial class SDL
     {
         public const int SDL_WINDOWPOS_UNDEFINED_MASK = 0x1FFF0000;
         public const int SDL_WINDOWPOS_UNDEFINED = SDL_WINDOWPOS_UNDEFINED_MASK | 0;
