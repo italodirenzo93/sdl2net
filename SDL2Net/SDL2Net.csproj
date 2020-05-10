@@ -4,6 +4,15 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>8</LangVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>SDL2.NET</Title>
+        <Authors>Italo Di Renzo</Authors>
+        <Description>.NET wrapper for SDL2</Description>
+        <PackageProjectUrl>https://github.com/italodirenzo93/SDL2.NET</PackageProjectUrl>
+        <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/italodirenzo93/SDL2.NET</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <Company>Italo Di Renzo</Company>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
