@@ -95,6 +95,18 @@ namespace SDL2Net.Internal
         [DllImport(SDL2Lib)]
         public static extern void SDL_DestroyWindow(IntPtr window);
 
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_ShowWindow(IntPtr window);
+
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_HideWindow(IntPtr window);
+
+        [DllImport(SDL2Lib)]
+        public static extern IntPtr SDL_GetWindowTitle(IntPtr window);
+        
+        [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
+        public static extern void SDL_SetWindowTitle(IntPtr window, string title);
+
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern int SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags flags, string title, string message, IntPtr window);
     }
