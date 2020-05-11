@@ -2,6 +2,7 @@ using System;
 using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_InitFlags;
+using static SDL2Net.Util;
 
 namespace SDL2Net
 {
@@ -11,11 +12,8 @@ namespace SDL2Net
 
         protected SDLApplication()
         {
-            var result = SDL_Init(SDL_INIT_EVERYTHING);
-            if (result != 0)
-            {
-                throw new SDLException();
-            }
+            var status = SDL_Init(SDL_INIT_EVERYTHING);
+            ThrowIfFailed(status);
         }
 
         protected virtual void Initialize() { }

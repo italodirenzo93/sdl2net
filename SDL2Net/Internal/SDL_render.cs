@@ -43,5 +43,8 @@ namespace SDL2Net.Internal
 
         [DllImport(SDL2Lib)]
         public static extern int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
+
+        [DllImport(SDL2Lib)]
+        public static extern int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
     }
 }

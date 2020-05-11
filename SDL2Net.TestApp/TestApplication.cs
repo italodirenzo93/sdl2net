@@ -11,13 +11,14 @@ namespace SDL2Net.TestApp
         {
             _window = new SDLWindow("Hello!", 100, 100, 800, 600);
             _renderer = new SDLRenderer(_window);
-            _renderer.DrawColor = Color.CornflowerBlue;
         }
 
         protected override void Update(uint elapsed)
         {
-            _window.Title = $"Elapsed: {elapsed} ms";
+            _renderer.DrawColor = Color.Black;
             _renderer.Clear();
+            _renderer.DrawColor = Color.Gold;
+            _renderer.DrawLine(300, 400, 500, 100);
             _renderer.Present();
         }
 

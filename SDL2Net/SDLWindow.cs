@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using static SDL2Net.Internal.SDL;
+using static SDL2Net.Util;
 
 namespace SDL2Net
 {
@@ -12,11 +13,7 @@ namespace SDL2Net
         public SDLWindow(string title, int x, int y, int w, int h)
         {
             WindowPtr = SDL_CreateWindow(title, x, y, w, h, 0);
-            if (WindowPtr == IntPtr.Zero)
-            {
-                throw new SDLException();
-            }
-
+            ThrowIfFailed(WindowPtr);
             IsVisible = true;
         }
         
