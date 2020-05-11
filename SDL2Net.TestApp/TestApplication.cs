@@ -6,6 +6,13 @@ namespace SDL2Net.TestApp
     {
         private readonly SDLWindow _window;
         private readonly SDLRenderer _renderer;
+        
+        private static readonly Point[] _points = {
+            new Point(320, 200), 
+            new Point(300, 240), 
+            new Point(340, 240),
+            new Point(320, 200)
+        };
 
         public TestApplication()
         {
@@ -18,7 +25,8 @@ namespace SDL2Net.TestApp
             _renderer.DrawColor = Color.Black;
             _renderer.Clear();
             _renderer.DrawColor = Color.Gold;
-            _renderer.DrawLine(300, 400, 500, 100);
+            //_renderer.DrawLine(300, 400, 500, 100);
+            _renderer.DrawLines(_points);
             _renderer.Present();
         }
 
@@ -29,7 +37,7 @@ namespace SDL2Net.TestApp
             base.Dispose();
         }
 
-        public static void Main()
+        public static void Main(string[] args)
         {
             using var app = new TestApplication();
             app.Run();

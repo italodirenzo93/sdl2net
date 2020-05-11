@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_RendererFlags;
 using static SDL2Net.Util;
@@ -45,6 +48,12 @@ namespace SDL2Net
         public void DrawLine(Point from, Point to)
         {
             DrawLine(from.X, from.Y, to.X, to.Y);
+        }
+
+        public void DrawLines(IEnumerable<Point> points)
+        {
+            var sdlPoints = points.Select(p => new SDL_Point {x = p.X, y = p.Y}).ToArray();
+            ThrowIfFailed(SDL_RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length));
         }
         
         public void Dispose()

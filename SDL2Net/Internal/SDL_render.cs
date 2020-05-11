@@ -46,5 +46,8 @@ namespace SDL2Net.Internal
 
         [DllImport(SDL2Lib)]
         public static extern int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
+        
+        [DllImport(SDL2Lib)]
+        public static extern int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
     }
 }
