@@ -1,4 +1,6 @@
+using System;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace SDL2Net.TestApp
 {
@@ -18,6 +20,11 @@ namespace SDL2Net.TestApp
         {
             _window = new SDLWindow("Hello!", 100, 100, 800, 600);
             _renderer = new SDLRenderer(_window);
+        }
+
+        protected override void Initialize()
+        {
+            MessageBox.ShowInformation("Test", "will you break?", _window);
         }
 
         protected override void Update(uint elapsed)
@@ -40,7 +47,15 @@ namespace SDL2Net.TestApp
         public static void Main(string[] args)
         {
             using var app = new TestApplication();
-            app.Run();
+            try
+            {
+                app.Run();
+            }
+            catch (SDLException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
         }
     }
 }
