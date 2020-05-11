@@ -119,6 +119,12 @@ namespace SDL2Net.Internal
         [DllImport(SDL2Lib)]
         public static extern void SDL_SetWindowSize(IntPtr window, int x, int y);
 
+        [DllImport(SDL2Lib)]
+        public static extern SDL_WindowFlags SDL_GetWindowFlags(IntPtr window);
+
+        [DllImport(SDL2Lib)]
+        public static extern void SDL_SetWindowResizable(IntPtr window, int resizable);
+
         [DllImport(SDL2Lib, CharSet = CharSet.Ansi)]
         public static extern int SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags flags, string title, string message, IntPtr window);
     }

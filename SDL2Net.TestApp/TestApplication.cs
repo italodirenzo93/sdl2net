@@ -18,7 +18,10 @@ namespace SDL2Net.TestApp
 
         public TestApplication()
         {
-            _window = new SDLWindow("Hello!", 100, 100, 800, 600);
+            _window = new SDLWindow("Hello!", 100, 100, 800, 600)
+            {
+                Resizable = true
+            };
             _renderer = new SDLRenderer(_window);
         }
 

@@ -1,7 +1,9 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
+using static SDL2Net.Internal.SDL_WindowFlags;
 using static SDL2Net.Util;
 
 namespace SDL2Net
@@ -44,7 +46,13 @@ namespace SDL2Net
                 SDL_GetWindowSize(WindowPtr, ref w, ref h);
                 return new Size(w, h);
             }
-            set => SDL_SetWindowPosition(WindowPtr, value.Width, value.Height);
+            set => SDL_SetWindowSize(WindowPtr, value.Width, value.Height);
+        }
+
+        public bool Resizable
+        {
+            get => SDL_GetWindowFlags(WindowPtr).HasFlag(SDL_WINDOW_RESIZABLE);
+            set => SDL_SetWindowResizable(WindowPtr, Convert.ToInt32(value));
         }
 
         public void Show()
