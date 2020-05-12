@@ -5,7 +5,7 @@ using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
 {
-    public class TestApplication : SDLApplication
+    public sealed class TestApplication : SDLApplication, IObserver<string>
     {
         private readonly Window _window;
         private readonly Renderer _renderer;
@@ -28,7 +28,8 @@ namespace SDL2Net.TestApp
 
         protected override void Initialize()
         {
-            MessageBox.ShowInformation("Test", "will you break?", _window);
+            //MessageBox.ShowInformation("Test", "will you break?", _window);
+            Events.Subscribe(this);
         }
 
         protected override void Update(uint elapsed)
@@ -60,6 +61,21 @@ namespace SDL2Net.TestApp
                 Console.Error.WriteLine(ex);
                 throw;
             }
+        }
+
+        public void OnCompleted()
+        {
+            Console.WriteLine("shutting down...");
+        }
+
+        public void OnError(Exception error)
+        {
+            MessageBox.ShowError("Error Event", error.Message, _window);
+        }
+
+        public void OnNext(string value)
+        {
+            Console.WriteLine(value);
         }
     }
 }

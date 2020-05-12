@@ -1,4 +1,6 @@
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_InitFlags;
@@ -9,12 +11,15 @@ namespace SDL2Net
     public abstract class SDLApplication : IDisposable
     {
         private bool _running = true;
+        private readonly Subject<string> _events = new Subject<string>(); 
 
         protected SDLApplication()
         {
             var status = SDL_Init(SDL_INIT_EVERYTHING);
             ThrowIfFailed(status);
         }
+
+        public IObservable<string> Events => _events.AsObservable();
 
         protected virtual void Initialize() { }
         
@@ -39,22 +44,20 @@ namespace SDL2Net
                 switch (@event.type)
                 {
                     case SDL_EventType.SDL_QUIT:
+                        _events.OnCompleted();
                         _running = false;
                         break;
                     case SDL_EventType.SDL_KEYDOWN:
-                        OnKey(@event.key);
+                        _events.OnNext($"{@event.key.keysym.scancode} pressed!");
                         break;
                 }
             }
+            
         }
 
-        private void OnKey(SDL_KeyboardEvent keyboardEvent)
-        {
-            Console.WriteLine("{0} key pressed!", keyboardEvent.keysym.scancode);
-        }
-        
         public virtual void Dispose()
         {
+            _events.Dispose();
             SDL_Quit();
         }
     }
