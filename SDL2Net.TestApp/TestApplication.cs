@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using SDL2Net.Input;
 using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
@@ -30,6 +31,7 @@ namespace SDL2Net.TestApp
         {
             //MessageBox.ShowInformation("Test", "will you break?", _window);
             Events.Subscribe(this);
+            Keyboard.Keypresses.Subscribe(x => Console.WriteLine($"Scancode {x.Key} presses. repeat? {x.IsRepeat}"));
         }
 
         protected override void Update(uint elapsed)

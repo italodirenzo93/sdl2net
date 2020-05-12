@@ -233,15 +233,6 @@ namespace SDL2Net.Internal
         public SDL_Keysym keysym;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct SDL_Keysym
-    {
-        public SDL_scancode scancode;
-        public uint keycode;
-        public ushort mod;
-        public uint unused;
-    }
-    
     #endregion
     
     #region Functions
