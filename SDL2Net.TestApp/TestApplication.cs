@@ -1,13 +1,14 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
 {
     public class TestApplication : SDLApplication
     {
-        private readonly SDLWindow _window;
-        private readonly SDLRenderer _renderer;
+        private readonly Window _window;
+        private readonly Renderer _renderer;
         
         private static readonly Point[] _points = {
             new Point(320, 200), 
@@ -18,11 +19,11 @@ namespace SDL2Net.TestApp
 
         public TestApplication()
         {
-            _window = new SDLWindow("Hello!", 100, 100, 800, 600)
+            _window = new Window("Hello!", 100, 100, 800, 600)
             {
                 Resizable = true
             };
-            _renderer = new SDLRenderer(_window);
+            _renderer = new Renderer(_window);
         }
 
         protected override void Initialize()

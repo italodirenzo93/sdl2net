@@ -1,18 +1,17 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_WindowFlags;
 using static SDL2Net.Util;
 
-namespace SDL2Net
+namespace SDL2Net.Video
 {
-    public class SDLWindow : IDisposable
+    public class Window : IDisposable
     {
         internal readonly IntPtr WindowPtr;
 
-        public SDLWindow(string title, int x, int y, int w, int h)
+        public Window(string title, int x, int y, int w, int h)
         {
             WindowPtr = SDL_CreateWindow(title, x, y, w, h, 0);
             ThrowIfFailed(WindowPtr);

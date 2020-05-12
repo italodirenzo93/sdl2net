@@ -36,8 +36,21 @@ namespace SDL2Net
         {
             while (SDL_PollEvent(ref @event) != 0)
             {
-                if (@event.type == SDL_EventType.SDL_QUIT) _running = false;   
+                switch (@event.type)
+                {
+                    case SDL_EventType.SDL_QUIT:
+                        _running = false;
+                        break;
+                    case SDL_EventType.SDL_KEYDOWN:
+                        OnKey(@event.key);
+                        break;
+                }
             }
+        }
+
+        private void OnKey(SDL_KeyboardEvent keyboardEvent)
+        {
+            Console.WriteLine("{0} key pressed!", keyboardEvent.keysym.scancode);
         }
         
         public virtual void Dispose()

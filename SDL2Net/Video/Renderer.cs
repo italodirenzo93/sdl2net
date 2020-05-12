@@ -7,13 +7,13 @@ using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_RendererFlags;
 using static SDL2Net.Util;
 
-namespace SDL2Net
+namespace SDL2Net.Video
 {
-    public class SDLRenderer : IDisposable
+    public class Renderer : IDisposable
     {
         internal readonly IntPtr RendererPtr;
 
-        public SDLRenderer(SDLWindow window)
+        public Renderer(Window window)
         {
             RendererPtr = SDL_CreateRenderer(window.WindowPtr, -1, SDL_RENDERER_ACCELERATED);
             ThrowIfFailed(RendererPtr);

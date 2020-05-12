@@ -1,4 +1,5 @@
 using System;
+using SDL2Net.Video;
 using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_MessageBoxFlags;
 using static SDL2Net.Util;
@@ -7,7 +8,7 @@ namespace SDL2Net
 {
     public static class MessageBox
     {
-        public static void ShowInformation(string title, string message, SDLWindow? window = null)
+        public static void ShowInformation(string title, string message, Window? window = null)
         {
             var result = SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_INFORMATION,
@@ -17,7 +18,7 @@ namespace SDL2Net
             ThrowIfFailed(result);
         }
         
-        public static void ShowWarning(string title, string message, SDLWindow? window = null)
+        public static void ShowWarning(string title, string message, Window? window = null)
         {
             var result = SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_WARNING,
@@ -27,7 +28,7 @@ namespace SDL2Net
             ThrowIfFailed(result);
         }
         
-        public static void ShowError(string title, string message, SDLWindow? window = null)
+        public static void ShowError(string title, string message, Window? window = null)
         {
             var result = SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
