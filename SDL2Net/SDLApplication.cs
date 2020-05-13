@@ -1,6 +1,8 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using SDL2Net.Input;
+using SDL2Net.Input.Events;
 using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_InitFlags;
@@ -48,11 +50,14 @@ namespace SDL2Net
                         _running = false;
                         break;
                     case SDL_EventType.SDL_KEYDOWN:
-                        _events.OnNext($"{@event.key.keysym.scancode} pressed!");
+                        Keyboard.Subject.OnNext(new KeypressEvent
+                        {
+                            Key = (int) @event.key.keysym.scancode,
+                            IsRepeat = @event.key.repeat == 1
+                        });
                         break;
                 }
             }
-            
         }
 
         public virtual void Dispose()
