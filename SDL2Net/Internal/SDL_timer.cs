@@ -1,10 +1,10 @@
-using System.Runtime.InteropServices;
-
 namespace SDL2Net.Internal
 {
     internal static partial class SDL
     {
-        [DllImport(SDL2Lib)]
-        public static extern uint SDL_GetTicks();
+        public delegate uint SDL_GetTicks();
+
+        public static readonly SDL_GetTicks GetTicks =
+            Util.LoadFunction<SDL_GetTicks>(NativeLibrary, nameof(SDL_GetTicks));
     }
 }

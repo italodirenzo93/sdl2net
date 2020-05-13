@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Net.Internal
 {
     #region Enumerations
-    
+
     [Flags]
     internal enum SDL_EventType : uint
     {
@@ -190,7 +190,7 @@ namespace SDL2Net.Internal
          */
         SDL_LASTEVENT = 0xFFFF
     }
-    
+
     #endregion
 
     #region Structures
@@ -234,14 +234,16 @@ namespace SDL2Net.Internal
     }
 
     #endregion
-    
+
     #region Functions
 
     internal static partial class SDL
     {
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_PollEvent(ref SDL_Event @event);
+        public delegate int SDL_PollEvent(ref SDL_Event @event);
+
+        public static readonly SDL_PollEvent PollEvent =
+            Util.LoadFunction<SDL_PollEvent>(NativeLibrary, nameof(SDL_PollEvent));
     }
-    
+
     #endregion
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 
 namespace SDL2Net.Internal
 {
@@ -27,36 +26,33 @@ namespace SDL2Net.Internal
 
     internal static partial class SDL
     {
-#if WINDOWS
-        private const string SDL2Lib = "SDL2.dll";
-#elif MACOS
-        //private const string SDL2Lib = "SDL2.framework/SDL2";
-        private const string SDL2Lib = "libsdl2";
-#else
-        #error Platform not defined
-#endif
+        public delegate int SDL_Init(SDL_InitFlags flags);
 
-        public delegate int MainFunction(int argc, string[] argv);
+        public delegate int SDL_InitSubSystem(SDL_InitFlags flags);
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_Init(SDL_InitFlags flags);
+        public delegate void SDL_Quit();
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_InitSubSystem(SDL_InitFlags flags);
+        public delegate void SDL_QuitSubSystem(SDL_InitFlags flags);
 
-        [DllImport(SDL2Lib)]
-        public static extern void SDL_Quit();
+        public delegate SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
 
-        [DllImport(SDL2Lib)]
-        public static extern void SDL_QuitSubSystem(SDL_InitFlags flags);
+        public static readonly SDL_Init Init = Util.LoadFunction<SDL_Init>(NativeLibrary, nameof(SDL_Init));
 
-        [DllImport(SDL2Lib)]
-        public static extern void SDL_SetMainReady();
+        public static readonly SDL_InitSubSystem InitSubSystem =
+            Util.LoadFunction<SDL_InitSubSystem>(NativeLibrary, nameof(SDL_InitSubSystem));
 
-        [DllImport(SDL2Lib)]
-        public static extern SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
+        public static readonly SDL_Quit Quit = Util.LoadFunction<SDL_Quit>(NativeLibrary, nameof(SDL_Quit));
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_WinRTRunApp(MainFunction mainFunction, IntPtr reserved);
+        public static readonly SDL_QuitSubSystem QuitSubSystem =
+            Util.LoadFunction<SDL_QuitSubSystem>(NativeLibrary, nameof(SDL_QuitSubSystem));
+
+        public static readonly SDL_WasInit WasInit = Util.LoadFunction<SDL_WasInit>(NativeLibrary, nameof(SDL_WasInit));
+
+        internal static IntPtr NativeLibrary => Util.CurrentPlatform switch
+        {
+            Platform.Windows => Util.LoadLibrary("SDL2.dll"),
+            Platform.MacOS => Util.LoadLibrary("/usr/local/Cellar/sdl2/2.0.12_1/lib/libSDL2-2.0.0.dylib"),
+            _ => throw new NotImplementedException("Haven't determined how to locate SDL on this platform")
+        };
     }
 }
