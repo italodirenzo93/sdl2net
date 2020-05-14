@@ -1,6 +1,6 @@
 using System;
+using SDL2Net.Internal;
 using SDL2Net.Video;
-using static SDL2Net.Internal.SDL;
 using static SDL2Net.Internal.SDL_MessageBoxFlags;
 using static SDL2Net.Util;
 
@@ -10,27 +10,27 @@ namespace SDL2Net
     {
         public static void ShowInformation(string title, string message, Window? window = null)
         {
-            var result = SDL_ShowSimpleMessageBox(
+            var result = SDL.ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_INFORMATION,
                 title,
                 message,
                 window?.WindowPtr ?? IntPtr.Zero);
             ThrowIfFailed(result);
         }
-        
+
         public static void ShowWarning(string title, string message, Window? window = null)
         {
-            var result = SDL_ShowSimpleMessageBox(
+            var result = SDL.ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_WARNING,
                 title,
                 message,
                 window?.WindowPtr ?? IntPtr.Zero);
             ThrowIfFailed(result);
         }
-        
+
         public static void ShowError(string title, string message, Window? window = null)
         {
-            var result = SDL_ShowSimpleMessageBox(
+            var result = SDL.ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
                 title,
                 message,

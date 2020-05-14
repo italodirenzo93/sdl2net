@@ -23,37 +23,47 @@ namespace SDL2Net.Internal
 
     internal static partial class SDL
     {
-        [DllImport(SDL2Lib)]
-        public static extern IntPtr SDL_CreateRenderer(IntPtr window, int index, SDL_RendererFlags flags);
+        public delegate IntPtr SDL_CreateRenderer(IntPtr window, int index, SDL_RendererFlags flags);
 
-        [DllImport(SDL2Lib)]
-        public static extern void SDL_DestroyRenderer(IntPtr renderer);
+        public delegate void SDL_DestroyRenderer(IntPtr renderer);
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_RenderClear(IntPtr renderer);
+        public delegate int SDL_GetRenderDrawColor(IntPtr renderer, out byte r, out byte g, out byte b, out byte a);
 
-        [DllImport(SDL2Lib)]
-        public static extern void SDL_RenderPresent(IntPtr renderer);
+        public delegate int SDL_RenderClear(IntPtr renderer);
+
+        public delegate int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
+
+        public delegate int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
+
+        public delegate void SDL_RenderPresent(IntPtr renderer);
+
+        public delegate int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
 
         public const byte SDL_ALPHA_OPAQUE = 255;
         public const byte SDL_ALPHA_TRANSPARENT = 0;
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_GetRenderDrawColor(IntPtr renderer, ref byte r, ref byte g, ref byte b, ref byte a);
+        public static readonly SDL_CreateRenderer CreateRenderer =
+            Util.LoadFunction<SDL_CreateRenderer>(NativeLibrary, nameof(SDL_CreateRenderer));
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
+        public static readonly SDL_DestroyRenderer DestroyRenderer =
+            Util.LoadFunction<SDL_DestroyRenderer>(NativeLibrary, nameof(SDL_DestroyRenderer));
 
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
-        
-        [DllImport(SDL2Lib)]
-        public static extern int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
+        public static readonly SDL_RenderClear RenderClear =
+            Util.LoadFunction<SDL_RenderClear>(NativeLibrary, nameof(SDL_RenderClear));
 
-        [DllImport(SDL2Lib)]
-        public static extern IntPtr SDL_CreateTexture(IntPtr renderer, uint format, int access, int w, int h);
+        public static readonly SDL_RenderPresent RenderPresent =
+            Util.LoadFunction<SDL_RenderPresent>(NativeLibrary, nameof(SDL_RenderPresent));
 
-        [DllImport(SDL2Lib)]
-        public static extern void SDL_DestroyTexture(IntPtr texture);
+        public static readonly SDL_GetRenderDrawColor GetRenderDrawColor =
+            Util.LoadFunction<SDL_GetRenderDrawColor>(NativeLibrary, nameof(SDL_GetRenderDrawColor));
+
+        public static readonly SDL_SetRenderDrawColor SetRenderDrawColor =
+            Util.LoadFunction<SDL_SetRenderDrawColor>(NativeLibrary, nameof(SDL_SetRenderDrawColor));
+
+        public static readonly SDL_RenderDrawLine RenderDrawLine =
+            Util.LoadFunction<SDL_RenderDrawLine>(NativeLibrary, nameof(SDL_RenderDrawLine));
+
+        public static readonly SDL_RenderDrawLines RenderDrawLines =
+            Util.LoadFunction<SDL_RenderDrawLines>(NativeLibrary, nameof(SDL_RenderDrawLines));
     }
 }

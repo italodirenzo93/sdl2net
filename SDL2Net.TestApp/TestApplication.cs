@@ -31,7 +31,7 @@ namespace SDL2Net.TestApp
         {
             //MessageBox.ShowInformation("Test", "will you break?", _window);
             Events.Subscribe(this);
-            Keyboard.Keypresses.Subscribe(x => Console.WriteLine($"Scancode {x.Key} presses. repeat? {x.IsRepeat}"));
+            Keyboard.Keypresses.Subscribe(x => Console.WriteLine($"Scancode {x.Key} pressed. repeat? {x.IsRepeat}"));
         }
 
         protected override void Update(uint elapsed)

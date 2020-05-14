@@ -11,10 +11,12 @@ namespace SDL2Net.Internal
         public ushort mod;
         public uint unused;
     }
-    
+
     internal static partial class SDL
     {
-        [DllImport(SDL2Lib)]
-        public static extern IntPtr SDL_GetKeyboardState(out int numkeys);
+        public delegate IntPtr SDL_GetKeyboardState(out int numkeys);
+
+        public static readonly SDL_GetKeyboardState GetKeyboardState =
+            Util.LoadFunction<SDL_GetKeyboardState>(NativeLibrary, nameof(SDL_GetKeyboardState));
     }
 }
