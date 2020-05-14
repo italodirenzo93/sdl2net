@@ -7,6 +7,7 @@ namespace SDL2Net.TestApp
 {
     public sealed class Triangle
     {
+        private readonly GamePad _gamePad = new GamePad(0);
         private float _speed = 125f;
 
         public Triangle()
@@ -71,13 +72,14 @@ namespace SDL2Net.TestApp
             var dx = x;
             var dy = y;
 
-            if (state.IsKeyDown((int) Key.Left)) dx = x - speedFactor;
+            if (state.IsKeyDown((int) Key.Left) || _gamePad.IsButtonDown(GamePadButton.DPadLeft)) dx = x - speedFactor;
 
-            if (state.IsKeyDown((int) Key.Right)) dx = x + speedFactor;
+            if (state.IsKeyDown((int) Key.Right) || _gamePad.IsButtonDown(GamePadButton.DPadRight))
+                dx = x + speedFactor;
 
-            if (state.IsKeyDown((int) Key.Up)) dy = y - speedFactor;
+            if (state.IsKeyDown((int) Key.Up) || _gamePad.IsButtonDown(GamePadButton.DPadUp)) dy = y - speedFactor;
 
-            if (state.IsKeyDown((int) Key.Down)) dy = y + speedFactor;
+            if (state.IsKeyDown((int) Key.Down) || _gamePad.IsButtonDown(GamePadButton.DPadDown)) dy = y + speedFactor;
 
             Position = new Vector2(dx, dy);
         }

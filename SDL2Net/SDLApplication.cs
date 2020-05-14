@@ -17,7 +17,7 @@ namespace SDL2Net
 
         protected SDLApplication()
         {
-            var status = SDL.Init(SDL_INIT_VIDEO);
+            var status = SDL.Init(SDL_INIT_EVENTS);
             ThrowIfFailed(status);
         }
 

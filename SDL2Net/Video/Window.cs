@@ -13,6 +13,7 @@ namespace SDL2Net.Video
 
         public Window(string title, int x, int y, int w, int h)
         {
+            ThrowIfFailed(SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO));
             WindowPtr = SDL.CreateWindow(title, x, y, w, h, 0);
             ThrowIfFailed(WindowPtr);
             IsVisible = true;
@@ -67,6 +68,7 @@ namespace SDL2Net.Video
         public void Dispose()
         {
             SDL.DestroyWindow(WindowPtr);
+            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
         }
     }
 }
