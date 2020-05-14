@@ -1,22 +1,39 @@
+using System;
 using System.Drawing;
 using SDL2Net.Input;
 using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
 {
-    public class Triangle
+    public sealed class Triangle
     {
-        private const float Speed = 125f;
+        private float _speed = 125f;
 
         public Triangle()
         {
+            Keyboard.KeyPresses.Subscribe(e =>
+            {
+                Color = e.Key switch
+                {
+                    Key.Home => Color.Gold,
+                    Key.End => Color.Aqua,
+                    _ => Color
+                };
+
+                _speed = e.Key switch
+                {
+                    Key.Pageup => _speed + 25f,
+                    Key.Pagedown => _speed - 25f,
+                    _ => _speed
+                };
+            });
         }
 
         public Triangle(float x, float y) : this(new Vector2(x, y))
         {
         }
 
-        public Triangle(Vector2 position)
+        public Triangle(Vector2 position) : this()
         {
             Position = position;
         }
@@ -49,7 +66,7 @@ namespace SDL2Net.TestApp
             var state = Keyboard.GetState();
             var x = Position.X;
             var y = Position.Y;
-            var speedFactor = deltaTime * Speed;
+            var speedFactor = deltaTime * _speed;
 
             var dx = x;
             var dy = y;
