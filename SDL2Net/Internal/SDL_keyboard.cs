@@ -1,12 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
+using SDL2Net.Input;
 
 namespace SDL2Net.Internal
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct SDL_Keysym
     {
-        public SDL_scancode scancode;
+        public Key scancode;
         public uint keycode;
         public ushort mod;
         public uint unused;

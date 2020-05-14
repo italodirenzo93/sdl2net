@@ -1,22 +1,24 @@
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
 using SDL2Net.Input;
 using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
 {
-    public sealed class TestApplication : SDLApplication, IObserver<string>
+    public sealed class TestApplication : SDLApplication
     {
-        private readonly Window _window;
+        private const int speed = 98;
         private readonly Renderer _renderer;
-        
-        private static readonly Point[] _points = {
-            new Point(320, 200), 
-            new Point(300, 240), 
-            new Point(340, 240),
-            new Point(320, 200)
-        };
+        private readonly Triangle _triangle = new Triangle(400, 250);
+        private readonly Window _window;
+        private double prevTime;
+
+        // private static readonly Point[] _points = {
+        //     new Point(320, 200), 
+        //     new Point(300, 240), 
+        //     new Point(340, 240),
+        //     new Point(320, 200)
+        // };
 
         public TestApplication()
         {
@@ -29,18 +31,35 @@ namespace SDL2Net.TestApp
 
         protected override void Initialize()
         {
-            //MessageBox.ShowInformation("Test", "will you break?", _window);
-            Events.Subscribe(this);
-            Keyboard.Keypresses.Subscribe(x => Console.WriteLine($"Scancode {x.Key} pressed. repeat? {x.IsRepeat}"));
+            Keyboard.KeyPresses.Subscribe(x =>
+            {
+                if (x.Key == (int) Key.Escape) Quit();
+
+                _triangle.Color = (Key) x.Key switch
+                {
+                    Key.Home => Color.Gold,
+                    Key.End => Color.Aqua,
+                    _ => _triangle.Color
+                };
+            });
         }
 
-        protected override void Update(uint elapsed)
+        protected override void Update(double elapsed)
         {
+            var frameTime = elapsed - prevTime;
+            prevTime = elapsed;
+
+            var deltaTime = (float) frameTime / 1000;
+
+            // Update the triangle's position
+            _triangle.Update(deltaTime);
+
             _renderer.DrawColor = Color.Black;
             _renderer.Clear();
-            _renderer.DrawColor = Color.Gold;
-            //_renderer.DrawLine(300, 400, 500, 100);
-            _renderer.DrawLines(_points);
+
+            // Draw our triangle to the screen
+            _triangle.Draw(_renderer);
+
             _renderer.Present();
         }
 
@@ -51,7 +70,7 @@ namespace SDL2Net.TestApp
             base.Dispose();
         }
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             using var app = new TestApplication();
             try
@@ -63,21 +82,6 @@ namespace SDL2Net.TestApp
                 Console.Error.WriteLine(ex);
                 throw;
             }
-        }
-
-        public void OnCompleted()
-        {
-            Console.WriteLine("shutting down...");
-        }
-
-        public void OnError(Exception error)
-        {
-            MessageBox.ShowError("Error Event", error.Message, _window);
-        }
-
-        public void OnNext(string value)
-        {
-            Console.WriteLine(value);
         }
     }
 }

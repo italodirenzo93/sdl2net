@@ -9,16 +9,15 @@ namespace SDL2Net.Input
 {
     public static class Keyboard
     {
-        internal static readonly Subject<KeypressEvent> Subject = new Subject<KeypressEvent>();
+        internal static readonly Subject<KeyPressEvent> Subject = new Subject<KeyPressEvent>();
 
-        public static IObservable<KeypressEvent> Keypresses => Subject.AsObservable();
+        public static IObservable<KeyPressEvent> KeyPresses => Subject.AsObservable();
 
         public static KeyboardState GetState()
         {
-            var state = SDL.GetKeyboardState(out _);
-            const int arraySize = (int) SDL_scancode.SDL_NUM_SCANCODES;
-            var keys = new int[arraySize];
-            Marshal.Copy(state, keys, 0, arraySize);
+            var state = SDL.GetKeyboardState(out var numkeys);
+            var keys = new byte[numkeys];
+            Marshal.Copy(state, keys, 0, numkeys);
             return new KeyboardState(keys);
         }
     }
