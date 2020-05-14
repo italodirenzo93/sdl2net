@@ -11,14 +11,7 @@ namespace SDL2Net.TestApp
         private readonly Renderer _renderer;
         private readonly Triangle _triangle = new Triangle(400, 250);
         private readonly Window _window;
-        private double prevTime;
-
-        // private static readonly Point[] _points = {
-        //     new Point(320, 200), 
-        //     new Point(300, 240), 
-        //     new Point(340, 240),
-        //     new Point(320, 200)
-        // };
+        private long prevTime;
 
         public TestApplication()
         {
@@ -31,20 +24,13 @@ namespace SDL2Net.TestApp
 
         protected override void Initialize()
         {
-            Keyboard.KeyPresses.Subscribe(x =>
+            Keyboard.KeyPresses.Subscribe(e =>
             {
-                if (x.Key == (int) Key.Escape) Quit();
-
-                _triangle.Color = (Key) x.Key switch
-                {
-                    Key.Home => Color.Gold,
-                    Key.End => Color.Aqua,
-                    _ => _triangle.Color
-                };
+                if (e.Key == Key.Escape) Quit();
             });
         }
 
-        protected override void Update(double elapsed)
+        protected override void Update(long elapsed)
         {
             var frameTime = elapsed - prevTime;
             prevTime = elapsed;

@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
@@ -22,8 +21,6 @@ namespace SDL2Net
             ThrowIfFailed(status);
         }
 
-        public IObservable<string> Events => _events.AsObservable();
-
         public virtual void Dispose()
         {
             _events.Dispose();
@@ -41,7 +38,7 @@ namespace SDL2Net
         ///     Code to run on every iteration of the main application loop such as rendering graphics or animations.
         /// </summary>
         /// <param name="elapsed">The number of milliseconds elapsed since the application was initialized</param>
-        protected virtual void Update(double elapsed)
+        protected virtual void Update(long elapsed)
         {
         }
 
@@ -66,7 +63,7 @@ namespace SDL2Net
             {
                 // Interesting example below of getting the best of both worlds
                 // var elapsed = SDL.GetTicks();
-                Update(_stopwatch.Elapsed.TotalMilliseconds);
+                Update(_stopwatch.ElapsedMilliseconds);
                 HandleEvent(ref @event);
             }
 
@@ -84,7 +81,7 @@ namespace SDL2Net
                     case SDL_EventType.SDL_KEYDOWN:
                         Keyboard.Subject.OnNext(new KeyPressEvent
                         {
-                            Key = (int) @event.key.keysym.scancode,
+                            Key = @event.key.keysym.scancode,
                             IsRepeat = @event.key.repeat == 1
                         });
                         break;
