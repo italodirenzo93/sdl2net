@@ -65,10 +65,35 @@ namespace SDL2Net.Video
             }
         }
 
-        public void Dispose()
+        #region IDisposable Support
+
+        private bool _disposed;
+        
+        protected virtual void Dispose(bool disposing)
         {
+            if (_disposed) return;
+            
+            if (disposing)
+            {
+            }
+
             SDL.DestroyWindow(WindowPtr);
             SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
+            
+            _disposed = true;
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~Window()
+        {
+            Dispose(false);
+        }
+        
+        #endregion
     }
 }

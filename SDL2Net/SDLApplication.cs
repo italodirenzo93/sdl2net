@@ -21,12 +21,6 @@ namespace SDL2Net
             ThrowIfFailed(status);
         }
 
-        public virtual void Dispose()
-        {
-            _events.Dispose();
-            SDL.Quit();
-        }
-
         /// <summary>
         ///     Perform initialization logic that requires the framework to be initialized first (i.e. loading assets)
         /// </summary>
@@ -87,5 +81,36 @@ namespace SDL2Net
                         break;
                 }
         }
+
+        #region IDisposable Support
+        
+        private bool _disposed;
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            
+            if (disposing)
+            {
+                _events.Dispose();
+            }
+            
+            SDL.Quit();
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~SDLApplication()
+        {
+            Dispose(false);
+        }
+        
+        #endregion
     }
 }

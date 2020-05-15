@@ -17,15 +17,37 @@ namespace SDL2Net.Input
 
         public int PlayerIndex { get; }
 
-        public void Dispose()
-        {
-            SDL.GameControllerClose(GamePadPtr);
-            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER);
-        }
-
         public bool IsButtonDown(GamePadButton button)
         {
             return SDL.GameControllerGetButton(GamePadPtr, button) == 1;
         }
+
+        #region IDisposable Support
+        
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+            }
+            SDL.GameControllerClose(GamePadPtr);
+            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER);
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~GamePad()
+        {
+            Dispose(false);
+        }
+
+        #endregion
     }
 }
