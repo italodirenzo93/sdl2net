@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using SDL2Net.Events;
 using SDL2Net.Input;
 using SDL2Net.Video;
 
@@ -23,9 +24,10 @@ namespace SDL2Net.TestApp
 
         protected override void Initialize()
         {
-            Keyboard.KeyPresses.Subscribe(e =>
+            Keyboard.Events.Subscribe(e =>
             {
                 if (e.Key == Key.Escape) Quit();
+                if (!e.IsRepeat) LogEvent(e, $"{e.Key} key pressed!");
             });
         }
 
@@ -55,20 +57,22 @@ namespace SDL2Net.TestApp
                 _renderer.Dispose();
                 _window.Dispose();
             }
-            base.Dispose();
+            base.Dispose(disposing);
+        }
+
+        private static void LogEvent(Event @event, string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"[{@event.Timestamp.ToLocalTime().TimeOfDay}] ");
+            Console.ResetColor();
+            Console.Write($"{message}\n");
         }
 
         public static void Main()
         {
-            using var app = new TestApplication();
-            try
+            using (var app = new TestApplication())
             {
-                app.Run();
-            }
-            catch (SDLException ex)
-            {
-                Console.Error.WriteLine(ex);
-                throw;
+                app.Run(); 
             }
         }
     }

@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using System.Reactive.Linq;
 using SDL2Net.Input;
+using SDL2Net.Input.Events;
 using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
@@ -11,22 +13,24 @@ namespace SDL2Net.TestApp
 
         public Triangle()
         {
-            Keyboard.KeyPresses.Subscribe(e =>
-            {
-                Color = e.Key switch
+            Keyboard.Events
+                .Where(e => e.ButtonState == ButtonState.Pressed && !e.IsRepeat)
+                .Subscribe(e =>
                 {
-                    Key.Home => Color.Gold,
-                    Key.End => Color.Aqua,
-                    _ => Color
-                };
+                    Color = e.Key switch
+                    {
+                        Key.Home => Color.Gold,
+                        Key.End => Color.Aqua,
+                        _ => Color
+                    };
 
-                _speed = e.Key switch
-                {
-                    Key.Pageup => _speed + 25f,
-                    Key.Pagedown => _speed - 25f,
-                    _ => _speed
-                };
-            });
+                    _speed = e.Key switch
+                    {
+                        Key.Pageup => _speed + 25f,
+                        Key.Pagedown => _speed - 25f,
+                        _ => _speed
+                    };
+                });
         }
 
         public Triangle(float x, float y) : this(new Vector2(x, y))

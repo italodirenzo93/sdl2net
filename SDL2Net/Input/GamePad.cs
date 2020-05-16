@@ -1,9 +1,13 @@
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using SDL2Net.Events;
+using SDL2Net.Input.Events;
 using SDL2Net.Internal;
 
 namespace SDL2Net.Input
 {
-    public class GamePad : IDisposable
+    public class GamePad : IDisposable, IObservable<GamePadEvent>
     {
         internal readonly IntPtr GamePadPtr;
 
@@ -15,11 +19,18 @@ namespace SDL2Net.Input
             Util.ThrowIfFailed(GamePadPtr);
         }
 
+        public static IObservable<GamePadEvent> Events => Event.Subject.OfType<GamePadEvent>().AsObservable();
+        
         public int PlayerIndex { get; }
 
         public bool IsButtonDown(GamePadButton button)
         {
             return SDL.GameControllerGetButton(GamePadPtr, button) == 1;
+        }
+        
+        public IDisposable Subscribe(IObserver<GamePadEvent> observer)
+        {
+            return Events.Where(e => e.PlayerIndex == PlayerIndex).Subscribe(observer);
         }
 
         #region IDisposable Support
