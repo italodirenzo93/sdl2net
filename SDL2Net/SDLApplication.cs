@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using SDL2Net.Events;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
@@ -12,16 +13,25 @@ namespace SDL2Net
 {
     public abstract class SDLApplication : IDisposable
     {
-        private static readonly IObserver<Event> Events = Event.Subject.AsObserver();
+        private static bool _instantiated;
+        private static readonly Subject<Event> Subject = new Subject<Event>();
         
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private bool _running = true;
 
         protected SDLApplication()
         {
+            // This is kind of hack to get around the problem needing to be able to access
+            // the application instance statically internally, but not being able to do a
+            // singleton pattern because this class is abstract
+            if (_instantiated)
+                throw new InvalidOperationException($"Only one instance of {nameof(SDLApplication)} may exist at a time");
             var status = SDL.Init(SDL_INIT_EVENTS);
             ThrowIfFailed(status);
+            _instantiated = true;
         }
+
+        internal static IObservable<Event> Events => Subject.AsObservable();
 
         /// <summary>
         ///     Perform initialization logic that requires the framework to be initialized first (i.e. loading assets)
@@ -43,7 +53,7 @@ namespace SDL2Net
         /// </summary>
         protected void Quit()
         {
-            Events.OnCompleted();
+            Subject.OnCompleted();
             _running = false;
         }
 
@@ -76,7 +86,7 @@ namespace SDL2Net
                         Quit();
                         break;
                     case SDL_EventType.SDL_KEYDOWN:
-                        Events.OnNext(new KeyPressEvent
+                        Subject.OnNext(new KeyPressEvent
                         {
                             Key = @event.key.keysym.scancode,
                             IsRepeat = @event.key.repeat == 1,
@@ -84,7 +94,7 @@ namespace SDL2Net
                         });
                         break;
                     case SDL_EventType.SDL_KEYUP:
-                        Events.OnNext(new KeyPressEvent
+                        Subject.OnNext(new KeyPressEvent
                         {
                             Key = @event.key.keysym.scancode,
                             IsRepeat = @event.key.repeat == 1,
@@ -92,14 +102,14 @@ namespace SDL2Net
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
-                        Events.OnNext(new GamePadButtonEvent(@event.cbutton.which)
+                        Subject.OnNext(new GamePadButtonEvent(@event.cbutton.which)
                         {
                             Button = GamePadButton.A,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONUP:
-                        Events.OnNext(new GamePadButtonEvent(@event.cbutton.which)
+                        Subject.OnNext(new GamePadButtonEvent(@event.cbutton.which)
                         {
                             Button = GamePadButton.A,
                             ButtonState = ButtonState.Released
@@ -117,9 +127,9 @@ namespace SDL2Net
         {
             if (_disposed) return;
             
-            if (disposing && !Event.Subject.IsDisposed)
+            if (disposing)
             {
-                Event.Subject.Dispose();
+                Subject.Dispose();
             }
             
             SDL.Quit();
@@ -131,6 +141,7 @@ namespace SDL2Net
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+            _instantiated = false;
         }
 
         ~SDLApplication()

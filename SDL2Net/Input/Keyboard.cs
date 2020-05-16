@@ -10,7 +10,7 @@ namespace SDL2Net.Input
 {
     public static class Keyboard
     {
-        public static IObservable<KeyPressEvent> Events => Event.Subject.OfType<KeyPressEvent>().AsObservable();
+        public static IObservable<KeyPressEvent> Events => SDLApplication.Events.OfType<KeyPressEvent>().AsObservable();
 
         public static KeyboardState GetState()
         {

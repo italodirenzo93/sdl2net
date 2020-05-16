@@ -5,6 +5,11 @@ namespace SDL2Net.Internal
 {
     internal static partial class SDL
     {
+        public delegate int SDL_NumJoysticks();
+
+        public static readonly SDL_NumJoysticks NumJoysticks =
+            Util.LoadFunction<SDL_NumJoysticks>(NativeLibrary, nameof(SDL_NumJoysticks));
+        
         public delegate void SDL_GameControllerClose(IntPtr gameController);
 
         public delegate byte SDL_GameControllerGetButton(IntPtr gameController, GamePadButton button);

@@ -19,7 +19,9 @@ namespace SDL2Net.Input
             Util.ThrowIfFailed(GamePadPtr);
         }
 
-        public static IObservable<GamePadEvent> Events => Event.Subject.OfType<GamePadEvent>().AsObservable();
+        public static IObservable<GamePadEvent> Events => SDLApplication.Events.OfType<GamePadEvent>().AsObservable();
+
+        public static int Count => SDL.NumJoysticks();
         
         public int PlayerIndex { get; }
 

@@ -7,12 +7,18 @@ using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
 {
-    public sealed class Triangle
+    public sealed class Triangle : IDisposable
     {
         private float _speed = 125f;
+        private readonly GamePad? _gamePad;
 
         public Triangle()
         {
+            if (GamePad.Count > 0)
+            {
+                _gamePad = new GamePad(0);
+            }
+            
             Keyboard.Events
                 .Where(e => e.ButtonState == ButtonState.Pressed && !e.IsRepeat)
                 .Subscribe(e =>
@@ -66,22 +72,12 @@ namespace SDL2Net.TestApp
 
         public void Update(float deltaTime)
         {
-            // Read the keyboard for movement
-            var state = Keyboard.GetState();
-            var x = Position.X;
-            var y = Position.Y;
             var speedFactor = deltaTime * _speed;
-
-            var dx = x;
-            var dy = y;
-
-            if (state.IsKeyDown((int) Key.Left)) dx = x - speedFactor;
-
-            if (state.IsKeyDown((int) Key.Right)) dx = x + speedFactor;
-
-            if (state.IsKeyDown((int) Key.Up)) dy = y - speedFactor;
-
-            if (state.IsKeyDown((int) Key.Down)) dy = y + speedFactor;
+            var dx = Position.X;
+            var dy = Position.Y;
+            
+            KeyboardMovement(ref dx, ref dy, speedFactor);
+            GamePadMovement(ref dx, ref dy, speedFactor);
 
             Position = new Vector2(dx, dy);
         }
@@ -90,6 +86,44 @@ namespace SDL2Net.TestApp
         {
             renderer.DrawColor = Color;
             renderer.DrawLines(Points);
+        }
+
+        private void KeyboardMovement(ref float dx, ref float dy, float speed)
+        {
+            // Read the keyboard for movement
+            var x = Position.X;
+            var y = Position.Y;
+            var state = Keyboard.GetState();
+            
+            if (state.IsKeyDown(Key.Left)) dx = x - speed;
+
+            if (state.IsKeyDown(Key.Right)) dx = x + speed;
+
+            if (state.IsKeyDown(Key.Up)) dy = y - speed;
+
+            if (state.IsKeyDown(Key.Down)) dy = y + speed;
+        }
+
+        private void GamePadMovement(ref float dx, ref float dy, float speed)
+        {
+            if (_gamePad == null) return;
+            
+            // Read the d-pad for movement
+            var x = Position.X;
+            var y = Position.Y;
+
+            if (_gamePad.IsButtonDown(GamePadButton.DPadLeft)) dx = x - speed;
+
+            if (_gamePad.IsButtonDown(GamePadButton.DPadRight)) dx = x + speed;
+
+            if (_gamePad.IsButtonDown(GamePadButton.DPadUp)) dy = y - speed;
+
+            if (_gamePad.IsButtonDown(GamePadButton.DPadDown)) dy = y + speed;
+        }
+
+        public void Dispose()
+        {
+            _gamePad?.Dispose();
         }
     }
 }
