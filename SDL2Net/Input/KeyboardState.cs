@@ -9,9 +9,6 @@ namespace SDL2Net.Input
             _keys = keys;
         }
 
-        public bool IsKeyDown(int key)
-        {
-            return _keys[key] == 1;
-        }
+        public bool IsKeyDown(Key key) => _keys[(int) key] == 1;
     }
 }

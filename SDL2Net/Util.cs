@@ -37,7 +37,7 @@ namespace SDL2Net
             }
         }
 
-        public static IntPtr LoadLibrary(string name) => CurrentPlatform switch
+        internal static IntPtr LoadLibrary(string name) => CurrentPlatform switch
         {
             Platform.Windows => Windows.LoadLibraryW(name),
             Platform.Linux => Linux.dlopen(name, RTLD_LAZY),
@@ -45,7 +45,7 @@ namespace SDL2Net
             _ => throw new NotSupportedException(RuntimeInformation.OSDescription)
         };
 
-        public static TDelegate LoadFunction<TDelegate>(IntPtr library, string functionName)
+        internal static TDelegate LoadFunction<TDelegate>(IntPtr library, string functionName)
         {
             var procAddress = CurrentPlatform switch
             {
@@ -58,12 +58,12 @@ namespace SDL2Net
             return Marshal.GetDelegateForFunctionPointer<TDelegate>(procAddress);
         }
 
-        public static void ThrowIfFailed(int status)
+        internal static void ThrowIfFailed(int status)
         {
             if (status != 0) throw new SDLException();
         }
 
-        public static void ThrowIfFailed(IntPtr ptr)
+        internal static void ThrowIfFailed(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero) throw new SDLException();
         }

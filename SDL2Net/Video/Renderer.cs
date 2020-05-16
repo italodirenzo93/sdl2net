@@ -28,11 +28,6 @@ namespace SDL2Net.Video
             set => ThrowIfFailed(SDL.SetRenderDrawColor(RendererPtr, value.R, value.G, value.B, value.A));
         }
 
-        public void Dispose()
-        {
-            SDL.DestroyRenderer(RendererPtr);
-        }
-
         public void Clear()
         {
             ThrowIfFailed(SDL.RenderClear(RendererPtr));
@@ -58,5 +53,32 @@ namespace SDL2Net.Video
             var sdlPoints = points.Select(p => new SDL_Point {x = p.X, y = p.Y}).ToArray();
             ThrowIfFailed(SDL.RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length));
         }
+
+        #region IDisposable Support
+
+        private bool _disposed;
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+            }
+            SDL.DestroyRenderer(RendererPtr);
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~Renderer()
+        {
+            Dispose(false);
+        }
+
+        #endregion
     }
 }

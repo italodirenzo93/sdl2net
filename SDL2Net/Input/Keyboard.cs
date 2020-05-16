@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
+using SDL2Net.Events;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
 
@@ -9,9 +10,7 @@ namespace SDL2Net.Input
 {
     public static class Keyboard
     {
-        internal static readonly Subject<KeyPressEvent> Subject = new Subject<KeyPressEvent>();
-
-        public static IObservable<KeyPressEvent> KeyPresses => Subject.AsObservable();
+        public static IObservable<KeyPressEvent> Events => SDLApplication.Events.OfType<KeyPressEvent>().AsObservable();
 
         public static KeyboardState GetState()
         {

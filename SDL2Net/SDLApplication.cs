@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using SDL2Net.Events;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
@@ -11,21 +13,25 @@ namespace SDL2Net
 {
     public abstract class SDLApplication : IDisposable
     {
-        private readonly Subject<string> _events = new Subject<string>();
+        private static bool _instantiated;
+        private static readonly Subject<Event> Subject = new Subject<Event>();
+        
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private bool _running = true;
 
         protected SDLApplication()
         {
-            var status = SDL.Init(SDL_INIT_VIDEO);
+            // This is kind of hack to get around the problem needing to be able to access
+            // the application instance statically internally, but not being able to do a
+            // singleton pattern because this class is abstract
+            if (_instantiated)
+                throw new InvalidOperationException($"Only one instance of {nameof(SDLApplication)} may exist at a time");
+            var status = SDL.Init(SDL_INIT_EVENTS);
             ThrowIfFailed(status);
+            _instantiated = true;
         }
 
-        public virtual void Dispose()
-        {
-            _events.Dispose();
-            SDL.Quit();
-        }
+        internal static IObservable<Event> Events => Subject.AsObservable();
 
         /// <summary>
         ///     Perform initialization logic that requires the framework to be initialized first (i.e. loading assets)
@@ -47,7 +53,7 @@ namespace SDL2Net
         /// </summary>
         protected void Quit()
         {
-            _events.OnCompleted();
+            Subject.OnCompleted();
             _running = false;
         }
 
@@ -57,8 +63,8 @@ namespace SDL2Net
         public void Run()
         {
             Initialize();
-            var @event = new SDL_Event();
             _stopwatch.Start();
+            var @event = new SDL_Event();
             while (_running)
             {
                 // Interesting example below of getting the best of both worlds
@@ -73,19 +79,76 @@ namespace SDL2Net
         private void HandleEvent(ref SDL_Event @event)
         {
             while (SDL.PollEvent(ref @event) != 0)
+            {
                 switch (@event.type)
                 {
                     case SDL_EventType.SDL_QUIT:
                         Quit();
                         break;
                     case SDL_EventType.SDL_KEYDOWN:
-                        Keyboard.Subject.OnNext(new KeyPressEvent
+                        Subject.OnNext(new KeyPressEvent
                         {
                             Key = @event.key.keysym.scancode,
-                            IsRepeat = @event.key.repeat == 1
+                            IsRepeat = @event.key.repeat == 1,
+                            ButtonState = ButtonState.Pressed
+                        });
+                        break;
+                    case SDL_EventType.SDL_KEYUP:
+                        Subject.OnNext(new KeyPressEvent
+                        {
+                            Key = @event.key.keysym.scancode,
+                            IsRepeat = @event.key.repeat == 1,
+                            ButtonState = ButtonState.Released
+                        });
+                        break;
+                    case SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
+                        Subject.OnNext(new GamePadButtonEvent(@event.cbutton.which)
+                        {
+                            Button = GamePadButton.A,
+                            ButtonState = ButtonState.Pressed
+                        });
+                        break;
+                    case SDL_EventType.SDL_CONTROLLERBUTTONUP:
+                        Subject.OnNext(new GamePadButtonEvent(@event.cbutton.which)
+                        {
+                            Button = GamePadButton.A,
+                            ButtonState = ButtonState.Released
                         });
                         break;
                 }
+            }
         }
+
+        #region IDisposable Support
+        
+        private bool _disposed;
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            
+            if (disposing)
+            {
+                Subject.Dispose();
+            }
+            
+            SDL.Quit();
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            _instantiated = false;
+        }
+
+        ~SDLApplication()
+        {
+            Dispose(false);
+        }
+        
+        #endregion
     }
 }
