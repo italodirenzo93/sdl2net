@@ -11,21 +11,23 @@ using static SDL2Net.Util;
 
 namespace SDL2Net
 {
-    public abstract class SDLApplication : IDisposable
+    public class SDLApplication : IDisposable
     {
         private static bool _instantiated;
         private static readonly Subject<Event> Subject = new Subject<Event>();
-        
+
         private readonly Stopwatch _stopwatch = new Stopwatch();
+        private SDL_Event _event;
         private bool _running = true;
 
-        protected SDLApplication()
+        public SDLApplication()
         {
             // This is kind of hack to get around the problem needing to be able to access
             // the application instance statically internally, but not being able to do a
             // singleton pattern because this class is abstract
             if (_instantiated)
-                throw new InvalidOperationException($"Only one instance of {nameof(SDLApplication)} may exist at a time");
+                throw new InvalidOperationException(
+                    $"Only one instance of {nameof(SDLApplication)} may exist at a time");
             var status = SDL.Init(SDL_INIT_EVENTS);
             ThrowIfFailed(status);
             _instantiated = true;
@@ -34,24 +36,29 @@ namespace SDL2Net
         internal static IObservable<Event> Events => Subject.AsObservable();
 
         /// <summary>
+        ///     The number of milliseconds elapsed since the application was initialized
+        /// </summary>
+        public long Elapsed => _stopwatch.ElapsedMilliseconds;
+
+        /// <summary>
         ///     Perform initialization logic that requires the framework to be initialized first (i.e. loading assets)
         /// </summary>
-        protected virtual void Initialize()
-        {
-        }
+        public Action? OnInitialize { get; set; }
 
         /// <summary>
         ///     Code to run on every iteration of the main application loop such as rendering graphics or animations.
         /// </summary>
-        /// <param name="elapsed">The number of milliseconds elapsed since the application was initialized</param>
-        protected virtual void Update(long elapsed)
-        {
-        }
+        public Action? OnUpdate { get; set; }
+
+        /// <summary>
+        ///     Code to run execute right before the <see cref="Run" /> method returns.
+        /// </summary>
+        public Action? OnExit { get; set; }
 
         /// <summary>
         ///     Signals the game loop to exit.
         /// </summary>
-        protected void Quit()
+        public void Quit()
         {
             Subject.OnCompleted();
             _running = false;
@@ -62,25 +69,32 @@ namespace SDL2Net
         /// </summary>
         public void Run()
         {
-            Initialize();
+            // Run initialization code
+            OnInitialize?.Invoke();
+
+            // Start game timer
             _stopwatch.Start();
-            var @event = new SDL_Event();
+
+            // Main loop
             while (_running)
             {
                 // Interesting example below of getting the best of both worlds
                 // var elapsed = SDL.GetTicks();
-                Update(_stopwatch.ElapsedMilliseconds);
-                HandleEvent(ref @event);
+                OnUpdate?.Invoke();
+                HandleEvent();
             }
 
+            // Stop game timer
             _stopwatch.Stop();
+
+            // Run cleanup code
+            OnExit?.Invoke();
         }
 
-        private void HandleEvent(ref SDL_Event @event)
+        private void HandleEvent()
         {
-            while (SDL.PollEvent(ref @event) != 0)
-            {
-                switch (@event.type)
+            while (SDL.PollEvent(ref _event) != 0)
+                switch (_event.type)
                 {
                     case SDL_EventType.SDL_QUIT:
                         Quit();
@@ -88,50 +102,46 @@ namespace SDL2Net
                     case SDL_EventType.SDL_KEYDOWN:
                         Subject.OnNext(new KeyPressEvent
                         {
-                            Key = @event.key.keysym.scancode,
-                            IsRepeat = @event.key.repeat == 1,
+                            Key = _event.key.keysym.scancode,
+                            IsRepeat = _event.key.repeat == 1,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_KEYUP:
                         Subject.OnNext(new KeyPressEvent
                         {
-                            Key = @event.key.keysym.scancode,
-                            IsRepeat = @event.key.repeat == 1,
+                            Key = _event.key.keysym.scancode,
+                            IsRepeat = _event.key.repeat == 1,
                             ButtonState = ButtonState.Released
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
-                        Subject.OnNext(new GamePadButtonEvent(@event.cbutton.which)
+                        Subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
                         {
                             Button = GamePadButton.A,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONUP:
-                        Subject.OnNext(new GamePadButtonEvent(@event.cbutton.which)
+                        Subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
                         {
                             Button = GamePadButton.A,
                             ButtonState = ButtonState.Released
                         });
                         break;
                 }
-            }
         }
 
         #region IDisposable Support
-        
+
         private bool _disposed;
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
-            
-            if (disposing)
-            {
-                Subject.Dispose();
-            }
-            
+
+            if (disposing) Subject.Dispose();
+
             SDL.Quit();
 
             _disposed = true;
@@ -148,7 +158,7 @@ namespace SDL2Net
         {
             Dispose(false);
         }
-        
+
         #endregion
     }
 }
