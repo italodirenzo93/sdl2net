@@ -15,14 +15,19 @@ namespace SDL2Net.TestApp
 
         public TestApplication()
         {
+            OnInitialize = Initialize;
+            OnUpdate = Update;
+            OnExit = Exit;
+
             _window = new Window("Hello!", 100, 100, 800, 600)
             {
                 Resizable = true
             };
+
             _renderer = new Renderer(_window);
         }
 
-        protected override void Initialize()
+        private void Initialize()
         {
             Keyboard.Events.Subscribe(e =>
             {
@@ -31,16 +36,16 @@ namespace SDL2Net.TestApp
             });
         }
 
-        protected override void Update(long elapsed)
+        private void Update()
         {
-            var frameTime = elapsed - _prevTime;
-            _prevTime = elapsed;
+            var frameTime = Elapsed - _prevTime;
+            _prevTime = Elapsed;
 
             var deltaTime = (float) frameTime / 1000;
 
             // Update the triangle's position
             _triangle.Update(deltaTime);
-            
+
             _renderer.DrawColor = Color.Black;
             _renderer.Clear();
 
@@ -50,14 +55,9 @@ namespace SDL2Net.TestApp
             _renderer.Present();
         }
 
-        protected override void Dispose(bool disposing)
+        private void Exit()
         {
-            if (disposing)
-            {
-                _renderer.Dispose();
-                _window.Dispose();
-            }
-            base.Dispose(disposing);
+            Console.WriteLine("Exiting app...");
         }
 
         private static void LogEvent(Event @event, string message)
@@ -68,12 +68,22 @@ namespace SDL2Net.TestApp
             Console.Write($"{message}\n");
         }
 
-        public static void Main()
+        protected override void Dispose(bool disposing)
         {
-            using (var app = new TestApplication())
+            if (disposing)
             {
-                app.Run(); 
+                _renderer.Dispose();
+                _triangle.Dispose();
+                _window.Dispose();
             }
+
+            base.Dispose(disposing);
+        }
+
+        private static void Main()
+        {
+            using var app = new TestApplication();
+            app.Run();
         }
     }
 }
