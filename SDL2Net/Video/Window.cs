@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL_WindowFlags;
-using static SDL2Net.Util;
+using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net.Video
 {
@@ -68,18 +68,18 @@ namespace SDL2Net.Video
         #region IDisposable Support
 
         private bool _disposed;
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
-            
+
             if (disposing)
             {
             }
 
             SDL.DestroyWindow(WindowPtr);
             SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
-            
+
             _disposed = true;
         }
 
@@ -93,7 +93,7 @@ namespace SDL2Net.Video
         {
             Dispose(false);
         }
-        
+
         #endregion
     }
 }

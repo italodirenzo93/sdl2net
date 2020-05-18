@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using SDL2Net.Input;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Internal
 {

@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
@@ -9,16 +11,11 @@ namespace SDL2Net.TestApp
 {
     public sealed class Triangle : IDisposable
     {
+        private GamePad? _gamePad;
         private float _speed = 125f;
-        private readonly GamePad? _gamePad;
 
         public Triangle()
         {
-            if (GamePad.Count > 0)
-            {
-                _gamePad = new GamePad(0);
-            }
-            
             Keyboard.Events
                 .Where(e => e.ButtonState == ButtonState.Pressed && !e.IsRepeat)
                 .Subscribe(e =>
@@ -37,6 +34,9 @@ namespace SDL2Net.TestApp
                         _ => _speed
                     };
                 });
+
+            GamePad.GamePads.Where(pad => pad.PlayerIndex == 0)
+                .Subscribe(new AnonymousObserver<GamePad?>(pad => _gamePad = pad));
         }
 
         public Triangle(float x, float y) : this(new Vector2(x, y))
@@ -70,12 +70,17 @@ namespace SDL2Net.TestApp
             }
         }
 
+        public void Dispose()
+        {
+            _gamePad?.Dispose();
+        }
+
         public void Update(float deltaTime)
         {
             var speedFactor = deltaTime * _speed;
             var dx = Position.X;
             var dy = Position.Y;
-            
+
             KeyboardMovement(ref dx, ref dy, speedFactor);
             GamePadMovement(ref dx, ref dy, speedFactor);
 
@@ -94,7 +99,7 @@ namespace SDL2Net.TestApp
             var x = Position.X;
             var y = Position.Y;
             var state = Keyboard.GetState();
-            
+
             if (state.IsKeyDown(Key.Left)) dx = x - speed;
 
             if (state.IsKeyDown(Key.Right)) dx = x + speed;
@@ -107,7 +112,7 @@ namespace SDL2Net.TestApp
         private void GamePadMovement(ref float dx, ref float dy, float speed)
         {
             if (_gamePad == null) return;
-            
+
             // Read the d-pad for movement
             var x = Position.X;
             var y = Position.Y;
@@ -119,11 +124,6 @@ namespace SDL2Net.TestApp
             if (_gamePad.IsButtonDown(GamePadButton.DPadUp)) dy = y - speed;
 
             if (_gamePad.IsButtonDown(GamePadButton.DPadDown)) dy = y + speed;
-        }
-
-        public void Dispose()
-        {
-            _gamePad?.Dispose();
         }
     }
 }

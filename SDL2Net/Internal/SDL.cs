@@ -1,4 +1,5 @@
 using System;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Internal
 {

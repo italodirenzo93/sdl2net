@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using SDL2Net.Events;
@@ -7,7 +9,7 @@ using SDL2Net.Input;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
 using static SDL2Net.Internal.SDL_InitFlags;
-using static SDL2Net.Util;
+using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net
 {
@@ -15,6 +17,7 @@ namespace SDL2Net
     {
         private static bool _instantiated;
         private static readonly Subject<Event> Subject = new Subject<Event>();
+        internal static readonly HashSet<GamePad> GamePadsSet = new HashSet<GamePad>();
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private SDL_Event _event;
@@ -129,6 +132,14 @@ namespace SDL2Net
                             ButtonState = ButtonState.Released
                         });
                         break;
+                    case SDL_EventType.SDL_CONTROLLERDEVICEADDED:
+                        GamePadsSet.Add(new GamePad(_event.cdevice.which));
+                        break;
+                    case SDL_EventType.SDL_CONTROLLERDEVICEREMOVED:
+                        var pad = GamePadsSet.First(p => p.PlayerIndex == _event.cdevice.which);
+                        pad.Dispose();
+                        GamePadsSet.Remove(pad);
+                        break;
                 }
         }
 
@@ -140,7 +151,11 @@ namespace SDL2Net
         {
             if (_disposed) return;
 
-            if (disposing) Subject.Dispose();
+            if (disposing)
+            {
+                foreach (var pad in GamePadsSet) pad.Dispose();
+                Subject.Dispose();
+            }
 
             SDL.Quit();
 

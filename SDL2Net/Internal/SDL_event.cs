@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SDL2Net.Input;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Internal
 {
@@ -204,6 +205,7 @@ namespace SDL2Net.Internal
         [FieldOffset(0)] public SDL_WindowEvent window;
         [FieldOffset(0)] public SDL_KeyboardEvent key;
         [FieldOffset(0)] public SDL_ControllerButtonEvent cbutton;
+        [FieldOffset(0)] public SDL_ControllerDeviceEvent cdevice;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -227,7 +229,7 @@ namespace SDL2Net.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct SDL_KeyboardEvent
     {
-        public uint type;
+        public SDL_EventType type;
         public uint timestamp;
         public uint windowId;
         public byte state;
@@ -238,11 +240,19 @@ namespace SDL2Net.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct SDL_ControllerButtonEvent
     {
-        public uint type;
+        public SDL_EventType type;
         public uint timestamp;
         public int which;
         public GamePadButton button;
         public byte state;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SDL_ControllerDeviceEvent
+    {
+        public SDL_EventType type;
+        public uint timestamp;
+        public int which;
     }
 
     #endregion

@@ -2,7 +2,7 @@ using System;
 using SDL2Net.Internal;
 using SDL2Net.Video;
 using static SDL2Net.Internal.SDL_MessageBoxFlags;
-using static SDL2Net.Util;
+using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net
 {

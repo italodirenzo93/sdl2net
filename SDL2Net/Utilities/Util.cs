@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace SDL2Net
+namespace SDL2Net.Utilities
 {
     internal enum Platform
     {
@@ -37,13 +37,16 @@ namespace SDL2Net
             }
         }
 
-        internal static IntPtr LoadLibrary(string name) => CurrentPlatform switch
+        internal static IntPtr LoadLibrary(string name)
         {
-            Platform.Windows => Windows.LoadLibraryW(name),
-            Platform.Linux => Linux.dlopen(name, RTLD_LAZY),
-            Platform.MacOS => MacOS.dlopen(name, RTLD_LAZY),
-            _ => throw new NotSupportedException(RuntimeInformation.OSDescription)
-        };
+            return CurrentPlatform switch
+            {
+                Platform.Windows => Windows.LoadLibraryW(name),
+                Platform.Linux => Linux.dlopen(name, RTLD_LAZY),
+                Platform.MacOS => MacOS.dlopen(name, RTLD_LAZY),
+                _ => throw new NotSupportedException(RuntimeInformation.OSDescription)
+            };
+        }
 
         internal static TDelegate LoadFunction<TDelegate>(IntPtr library, string functionName)
         {
