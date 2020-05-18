@@ -8,6 +8,14 @@ using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net.Video
 {
+    [Flags]
+    public enum RenderFlip
+    {
+        None,
+        Horizontal,
+        Vertical
+    }
+
     /// <summary>
     ///     SDL Renderer object. https://wiki.libsdl.org/CategoryRender
     /// </summary>
@@ -84,6 +92,32 @@ namespace SDL2Net.Video
         {
             var sdlPoints = points.Select(p => new SDL_Point {x = p.X, y = p.Y}).ToArray();
             ThrowIfFailed(SDL.RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length));
+        }
+
+        public void CopyTexture(Texture texture, Rectangle? dest = null, Rectangle? source = null)
+        {
+            var result = SDL.RenderCopy(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
+                GetRectOrDefault(texture, dest));
+            if (result != 0) throw new SDLException();
+        }
+
+        public void CopyTexture(Texture texture, Rectangle? dest, Rectangle? source, double angle, Point? origin,
+            RenderFlip flip)
+        {
+            var result = SDL.RenderCopyEx(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
+                GetRectOrDefault(texture, dest),
+                angle, GetPointOrDefault(texture, origin), flip);
+            if (result != 0) throw new SDLException();
+        }
+
+        private static SDL_Rect GetRectOrDefault(Texture texture, Rectangle? rectangle)
+        {
+            return rectangle?.ToSdlRect() ?? new SDL_Rect {x = 0, y = 0, w = texture.Width, h = texture.Height};
+        }
+
+        private static SDL_Point GetPointOrDefault(Texture texture, Point? point)
+        {
+            return point?.ToSdlPoint() ?? new SDL_Point {x = texture.Width / 2, y = texture.Height / 2};
         }
 
         #region IDisposable Support
