@@ -9,22 +9,14 @@
         <Authors>Italo Di Renzo</Authors>
         <Description>.NET wrapper for SDL2</Description>
         <PackageProjectUrl>https://github.com/italodirenzo93/SDL2.NET</PackageProjectUrl>
-        <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <RepositoryUrl>https://github.com/italodirenzo93/SDL2.NET</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <Company>Italo Di Renzo</Company>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-      <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-      <DefineConstants>TRACE</DefineConstants>
-    </PropertyGroup>
-
     <ItemGroup>
-      <None Update="SDL2.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+      <None Include="../LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
     </ItemGroup>
 
     <ItemGroup>
