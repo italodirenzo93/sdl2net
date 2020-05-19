@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Input
 {
@@ -18,7 +19,7 @@ namespace SDL2Net.Input
             if (result != 0) throw new SDLException();
         }
 
-        public IObservable<KeyPressEvent> KeyboardEvents => _app.Events.OfType<KeyPressEvent>().AsObservable();
+        public IObservable<KeyPressEvent> Keyboard => _app.OfType<KeyPressEvent>().AsObservable();
 
         public KeyboardState KeyboardState
         {
@@ -46,6 +47,7 @@ namespace SDL2Net.Input
 
         protected virtual void Dispose(bool disposing)
         {
+            Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(InputSystem), disposing);
             if (_disposed) return;
             SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_EVENTS);
             _disposed = true;

@@ -36,7 +36,7 @@ namespace SDL2Net.TestApp
 
         private void Initialize()
         {
-            _inputSystem.KeyboardEvents.OfType<KeyPressEvent>()
+            _inputSystem.Keyboard.OfType<KeyPressEvent>()
                 .Where(e => !e.IsRepeat && e.ButtonState == ButtonState.Pressed)
                 .Subscribe(e =>
                 {

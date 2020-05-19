@@ -71,6 +71,8 @@ namespace SDL2Net.Video
 
         protected virtual void Dispose(bool disposing)
         {
+            OutputDebugString("Disposing {0}: disposing = {1}", nameof(Window), disposing);
+
             if (_disposed) return;
 
             if (disposing)

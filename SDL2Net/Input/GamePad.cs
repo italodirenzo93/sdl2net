@@ -36,6 +36,8 @@ namespace SDL2Net.Input
 
         protected virtual void Dispose(bool disposing)
         {
+            Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(GamePad), disposing);
+
             if (_disposed) return;
             if (disposing)
             {

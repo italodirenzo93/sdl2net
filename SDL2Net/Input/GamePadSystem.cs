@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Input
 {
@@ -29,7 +30,7 @@ namespace SDL2Net.Input
 
         public IObservable<GamePad> ConnectedPads => _gamepads.ToObservable();
 
-        public IObservable<GamePadEvent> Events => _app.Events.OfType<GamePadEvent>();
+        public IObservable<GamePadEvent> Events => _app.OfType<GamePadEvent>();
 
         private void GamePadAddedOrRemoved(GamePadConnectionEvent e)
         {
@@ -57,6 +58,8 @@ namespace SDL2Net.Input
 
         protected virtual void Dispose(bool disposing)
         {
+            Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(GamePadSystem), disposing);
+
             if (_disposed) return;
 
             if (disposing)

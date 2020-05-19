@@ -71,6 +71,16 @@ namespace SDL2Net.Utilities
             if (ptr == IntPtr.Zero) throw new SDLException();
         }
 
+        internal static void OutputDebugString(string format, params object[] args)
+        {
+#if DEBUG
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("[{0}] ", DateTimeOffset.Now.TimeOfDay);
+            Console.ResetColor();
+            Console.Write($"{format}\n", args);
+#endif
+        }
+
         private static class Windows
         {
             [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]

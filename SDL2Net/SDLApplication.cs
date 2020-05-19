@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using SDL2Net.Events;
 using SDL2Net.Input;
@@ -10,7 +9,7 @@ using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net
 {
-    public class SDLApplication : IDisposable
+    public class SDLApplication : IDisposable, IObservable<Event>
     {
         private static bool _instantiated;
         private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -32,8 +31,6 @@ namespace SDL2Net
             _instantiated = true;
         }
 
-        public IObservable<Event> Events => _subject.AsObservable();
-
         /// <summary>
         ///     The number of milliseconds elapsed since the application was initialized
         /// </summary>
@@ -53,6 +50,11 @@ namespace SDL2Net
         ///     Code to run execute right before the <see cref="Run" /> method returns.
         /// </summary>
         public Action? OnExit { get; set; }
+
+        public IDisposable Subscribe(IObserver<Event> observer)
+        {
+            return _subject.Subscribe(observer);
+        }
 
         /// <summary>
         ///     Signals the game loop to exit.
@@ -144,6 +146,8 @@ namespace SDL2Net
 
         protected virtual void Dispose(bool disposing)
         {
+            OutputDebugString("Disposing {0}: disposing = {1}", nameof(SDLApplication), disposing);
+
             if (_disposed) return;
 
             if (disposing) _subject.Dispose();
