@@ -1,7 +1,5 @@
 using System;
 using System.Drawing;
-using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
@@ -11,12 +9,14 @@ namespace SDL2Net.TestApp
 {
     public sealed class Triangle : IDisposable
     {
+        private readonly InputSystem _inputSystem;
         private GamePad? _gamePad;
         private float _speed = 125f;
 
-        public Triangle()
+        public Triangle(InputSystem inputSystem)
         {
-            Keyboard.Events
+            _inputSystem = inputSystem;
+            _inputSystem.Events
                 .Where(e => e.ButtonState == ButtonState.Pressed && !e.IsRepeat)
                 .Subscribe(e =>
                 {
@@ -34,16 +34,13 @@ namespace SDL2Net.TestApp
                         _ => _speed
                     };
                 });
-
-            GamePad.GamePads.Where(pad => pad.PlayerIndex == 0)
-                .Subscribe(new AnonymousObserver<GamePad?>(pad => _gamePad = pad));
         }
 
-        public Triangle(float x, float y) : this(new Vector2(x, y))
+        public Triangle(float x, float y, InputSystem inputSystem) : this(new Vector2(x, y), inputSystem)
         {
         }
 
-        public Triangle(Vector2 position) : this()
+        public Triangle(Vector2 position, InputSystem inputSystem) : this(inputSystem)
         {
             Position = position;
         }
@@ -98,7 +95,7 @@ namespace SDL2Net.TestApp
             // Read the keyboard for movement
             var x = Position.X;
             var y = Position.Y;
-            var state = Keyboard.GetState();
+            var state = _inputSystem.KeyboardState;
 
             if (state.IsKeyDown(Key.Left)) dx = x - speed;
 

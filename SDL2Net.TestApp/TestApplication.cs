@@ -1,7 +1,9 @@
 using System;
 using System.Drawing;
+using System.Reactive.Linq;
 using SDL2Net.Events;
 using SDL2Net.Input;
+using SDL2Net.Input.Events;
 using SDL2Net.Video;
 
 namespace SDL2Net.TestApp
@@ -9,7 +11,7 @@ namespace SDL2Net.TestApp
     public sealed class TestApplication : SDLApplication
     {
         private readonly Renderer _renderer;
-        private readonly Triangle _triangle = new Triangle(400, 250);
+        private readonly Triangle _triangle;
         private readonly Window _window;
         private long _prevTime;
 
@@ -25,15 +27,19 @@ namespace SDL2Net.TestApp
             };
 
             _renderer = new Renderer(_window);
+
+            _triangle = new Triangle(400, 250, InputSystem);
         }
 
         private void Initialize()
         {
-            Keyboard.Events.Subscribe(e =>
-            {
-                if (e.Key == Key.Escape) Quit();
-                if (!e.IsRepeat) LogEvent(e, $"{e.Key} key pressed!");
-            });
+            InputSystem.Events.OfType<KeyPressEvent>()
+                .Where(e => !e.IsRepeat && e.ButtonState == ButtonState.Pressed)
+                .Subscribe(e =>
+                {
+                    if (e.Key == Key.Escape) Quit();
+                    LogEvent(e, $"{e.Key} key pressed!");
+                });
         }
 
         private void Update()

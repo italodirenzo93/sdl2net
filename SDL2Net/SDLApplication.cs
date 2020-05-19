@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using SDL2Net.Events;
@@ -17,7 +15,6 @@ namespace SDL2Net
     {
         private static bool _instantiated;
         private static readonly Subject<Event> Subject = new Subject<Event>();
-        internal static readonly HashSet<GamePad> GamePadsSet = new HashSet<GamePad>();
 
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private SDL_Event _event;
@@ -34,9 +31,17 @@ namespace SDL2Net
             var status = SDL.Init(SDL_INIT_EVENTS);
             ThrowIfFailed(status);
             _instantiated = true;
+
+            // Instantiate sub-systems
+            InputSystem = new InputSystem(this);
+            GamePadSystem = new GamePadSystem(this);
         }
 
-        internal static IObservable<Event> Events => Subject.AsObservable();
+        public InputSystem InputSystem { get; }
+
+        public GamePadSystem GamePadSystem { get; }
+
+        public IObservable<Event> Events => Subject.AsObservable();
 
         /// <summary>
         ///     The number of milliseconds elapsed since the application was initialized
@@ -133,12 +138,11 @@ namespace SDL2Net
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERDEVICEADDED:
-                        GamePadsSet.Add(new GamePad(_event.cdevice.which));
+                        Subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which, GamePadConnection.Connected));
                         break;
                     case SDL_EventType.SDL_CONTROLLERDEVICEREMOVED:
-                        var pad = GamePadsSet.First(p => p.PlayerIndex == _event.cdevice.which);
-                        pad.Dispose();
-                        GamePadsSet.Remove(pad);
+                        Subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which,
+                            GamePadConnection.Disconnected));
                         break;
                 }
         }
@@ -151,11 +155,7 @@ namespace SDL2Net
         {
             if (_disposed) return;
 
-            if (disposing)
-            {
-                foreach (var pad in GamePadsSet) pad.Dispose();
-                Subject.Dispose();
-            }
+            if (disposing) Subject.Dispose();
 
             SDL.Quit();
 

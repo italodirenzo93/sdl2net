@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
 using SDL2Net.Utilities;
@@ -10,27 +7,22 @@ namespace SDL2Net.Input
 {
     public class GamePad : IDisposable, IObservable<GamePadEvent>, IEquatable<GamePad>
     {
+        private readonly GamePadSystem _system;
         internal readonly IntPtr GamePadPtr;
 
-        public GamePad(int playerIndex)
+        public GamePad(GamePadSystem system, int playerIndex)
         {
+            _system = system;
             PlayerIndex = playerIndex;
-            Util.ThrowIfFailed(SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER));
             GamePadPtr = SDL.GameControllerOpen(playerIndex);
             Util.ThrowIfFailed(GamePadPtr);
         }
-
-        public static IObservable<GamePadEvent> Events => SDLApplication.Events.OfType<GamePadEvent>().AsObservable();
-
-        public static IEnumerable<GamePad> GamePads => SDLApplication.GamePadsSet.AsEnumerable();
-
-        public static int Count => SDL.NumJoysticks();
 
         public int PlayerIndex { get; }
 
         public IDisposable Subscribe(IObserver<GamePadEvent> observer)
         {
-            return Events.Where(e => e.PlayerIndex == PlayerIndex).Subscribe(observer);
+            return _system.Events.Subscribe(observer);
         }
 
         public bool IsButtonDown(GamePadButton button)
@@ -50,7 +42,6 @@ namespace SDL2Net.Input
             }
 
             SDL.GameControllerClose(GamePadPtr);
-            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER);
             _disposed = true;
         }
 
