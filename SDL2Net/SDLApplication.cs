@@ -6,7 +6,6 @@ using SDL2Net.Events;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
-using static SDL2Net.Internal.SDL_InitFlags;
 using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net
@@ -14,9 +13,9 @@ namespace SDL2Net
     public class SDLApplication : IDisposable
     {
         private static bool _instantiated;
-        private static readonly Subject<Event> Subject = new Subject<Event>();
-
         private readonly Stopwatch _stopwatch = new Stopwatch();
+
+        private readonly Subject<Event> _subject = new Subject<Event>();
         private SDL_Event _event;
         private bool _running = true;
 
@@ -28,20 +27,12 @@ namespace SDL2Net
             if (_instantiated)
                 throw new InvalidOperationException(
                     $"Only one instance of {nameof(SDLApplication)} may exist at a time");
-            var status = SDL.Init(SDL_INIT_EVENTS);
+            var status = SDL.Init(0);
             ThrowIfFailed(status);
             _instantiated = true;
-
-            // Instantiate sub-systems
-            InputSystem = new InputSystem(this);
-            GamePadSystem = new GamePadSystem(this);
         }
 
-        public InputSystem InputSystem { get; }
-
-        public GamePadSystem GamePadSystem { get; }
-
-        public IObservable<Event> Events => Subject.AsObservable();
+        public IObservable<Event> Events => _subject.AsObservable();
 
         /// <summary>
         ///     The number of milliseconds elapsed since the application was initialized
@@ -68,7 +59,7 @@ namespace SDL2Net
         /// </summary>
         public void Quit()
         {
-            Subject.OnCompleted();
+            _subject.OnCompleted();
             _running = false;
         }
 
@@ -108,7 +99,7 @@ namespace SDL2Net
                         Quit();
                         break;
                     case SDL_EventType.SDL_KEYDOWN:
-                        Subject.OnNext(new KeyPressEvent
+                        _subject.OnNext(new KeyPressEvent
                         {
                             Key = _event.key.keysym.scancode,
                             IsRepeat = _event.key.repeat == 1,
@@ -116,7 +107,7 @@ namespace SDL2Net
                         });
                         break;
                     case SDL_EventType.SDL_KEYUP:
-                        Subject.OnNext(new KeyPressEvent
+                        _subject.OnNext(new KeyPressEvent
                         {
                             Key = _event.key.keysym.scancode,
                             IsRepeat = _event.key.repeat == 1,
@@ -124,24 +115,24 @@ namespace SDL2Net
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
-                        Subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
+                        _subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
                         {
                             Button = GamePadButton.A,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONUP:
-                        Subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
+                        _subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
                         {
                             Button = GamePadButton.A,
                             ButtonState = ButtonState.Released
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERDEVICEADDED:
-                        Subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which, GamePadConnection.Connected));
+                        _subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which, GamePadConnection.Connected));
                         break;
                     case SDL_EventType.SDL_CONTROLLERDEVICEREMOVED:
-                        Subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which,
+                        _subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which,
                             GamePadConnection.Disconnected));
                         break;
                 }
@@ -155,7 +146,7 @@ namespace SDL2Net
         {
             if (_disposed) return;
 
-            if (disposing) Subject.Dispose();
+            if (disposing) _subject.Dispose();
 
             SDL.Quit();
 

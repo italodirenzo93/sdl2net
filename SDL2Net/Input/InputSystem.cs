@@ -6,16 +6,19 @@ using SDL2Net.Internal;
 
 namespace SDL2Net.Input
 {
-    public class InputSystem
+    public class InputSystem : IDisposable
     {
         private readonly SDLApplication _app;
 
         public InputSystem(SDLApplication app)
         {
             _app = app;
+
+            var result = SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_EVENTS);
+            if (result != 0) throw new SDLException();
         }
 
-        public IObservable<KeyPressEvent> Events => _app.Events.OfType<KeyPressEvent>().AsObservable();
+        public IObservable<KeyPressEvent> KeyboardEvents => _app.Events.OfType<KeyPressEvent>().AsObservable();
 
         public KeyboardState KeyboardState
         {
@@ -27,5 +30,38 @@ namespace SDL2Net.Input
                 return new KeyboardState(keys);
             }
         }
+
+        public MouseState MouseState
+        {
+            get
+            {
+                var mask = SDL.GetMouseState(out var x, out var y);
+                return new MouseState(x, y, mask);
+            }
+        }
+
+        #region IDisposable Support
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_EVENTS);
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~InputSystem()
+        {
+            Dispose(false);
+        }
+
+        #endregion
     }
 }

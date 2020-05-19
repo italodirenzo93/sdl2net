@@ -16,7 +16,7 @@ namespace SDL2Net.TestApp
         public Triangle(InputSystem inputSystem)
         {
             _inputSystem = inputSystem;
-            _inputSystem.Events
+            _inputSystem.KeyboardEvents
                 .Where(e => e.ButtonState == ButtonState.Pressed && !e.IsRepeat)
                 .Subscribe(e =>
                 {

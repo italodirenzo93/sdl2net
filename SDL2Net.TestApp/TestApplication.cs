@@ -10,6 +10,7 @@ namespace SDL2Net.TestApp
 {
     public sealed class TestApplication : SDLApplication
     {
+        private readonly InputSystem _inputSystem;
         private readonly Renderer _renderer;
         private readonly Triangle _triangle;
         private readonly Window _window;
@@ -28,12 +29,14 @@ namespace SDL2Net.TestApp
 
             _renderer = new Renderer(_window);
 
-            _triangle = new Triangle(400, 250, InputSystem);
+            _inputSystem = new InputSystem(this);
+
+            _triangle = new Triangle(400, 250, _inputSystem);
         }
 
         private void Initialize()
         {
-            InputSystem.Events.OfType<KeyPressEvent>()
+            _inputSystem.KeyboardEvents.OfType<KeyPressEvent>()
                 .Where(e => !e.IsRepeat && e.ButtonState == ButtonState.Pressed)
                 .Subscribe(e =>
                 {
@@ -80,16 +83,11 @@ namespace SDL2Net.TestApp
             {
                 _renderer.Dispose();
                 _triangle.Dispose();
+                _inputSystem.Dispose();
                 _window.Dispose();
             }
 
             base.Dispose(disposing);
-        }
-
-        private static void Main()
-        {
-            using var app = new TestApplication();
-            app.Run();
         }
     }
 }
