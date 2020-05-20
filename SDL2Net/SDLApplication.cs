@@ -123,17 +123,56 @@ namespace SDL2Net
                             ButtonState = ButtonState.Released
                         });
                         break;
+                    case SDL_EventType.SDL_MOUSEMOTION:
+                        _subject.OnNext(new MouseMoveEvent
+                        {
+                            X = _event.motion.x,
+                            Y = _event.motion.y,
+                            RelativeX = _event.motion.xrel,
+                            RelativeY = _event.motion.yrel
+                        });
+                        break;
+                    case SDL_EventType.SDL_MOUSEBUTTONUP:
+                        _subject.OnNext(new MouseButtonEvent
+                        {
+                            Button = (MouseButton) _event.button.button,
+                            ButtonState = ButtonState.Released,
+                            Clicks = _event.button.clicks,
+                            X = _event.button.x,
+                            Y = _event.button.y
+                        });
+                        break;
+                    case SDL_EventType.SDL_MOUSEBUTTONDOWN:
+                        _subject.OnNext(new MouseButtonEvent
+                        {
+                            Button = (MouseButton) _event.button.button,
+                            ButtonState = ButtonState.Pressed,
+                            Clicks = _event.button.clicks,
+                            X = _event.button.x,
+                            Y = _event.button.y
+                        });
+                        break;
+                    case SDL_EventType.SDL_MOUSEWHEEL:
+                        _subject.OnNext(new MouseWheelEvent
+                        {
+                            X = _event.wheel.x,
+                            Y = _event.wheel.y,
+                            Direction = _event.wheel.direction == 1
+                                ? MouseWheelDirection.Flipped
+                                : MouseWheelDirection.Normal
+                        });
+                        break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
                         _subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
                         {
-                            Button = GamePadButton.A,
+                            Button = _event.cbutton.button,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONUP:
                         _subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
                         {
-                            Button = GamePadButton.A,
+                            Button = _event.cbutton.button,
                             ButtonState = ButtonState.Released
                         });
                         break;

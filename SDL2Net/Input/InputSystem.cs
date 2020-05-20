@@ -22,7 +22,15 @@ namespace SDL2Net.Input
             if (result != 0) throw new SDLException();
         }
 
+        /// <summary>
+        ///     Keyboard events.
+        /// </summary>
         public IObservable<KeyPressEvent> Keyboard => _app.OfType<KeyPressEvent>().AsObservable();
+
+        /// <summary>
+        ///     Mouse events.
+        /// </summary>
+        public IObservable<MouseEvent> Mouse => _app.OfType<MouseEvent>().AsObservable();
 
         /// <summary>
         ///     Snapshot of the current keyboard state.

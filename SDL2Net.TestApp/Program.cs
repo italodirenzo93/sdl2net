@@ -43,8 +43,6 @@ namespace SDL2Net.TestApp
                 inputSystem.Keyboard
                     .Where(e => e.Key == Key.Escape && e.ButtonState == ButtonState.Pressed)
                     .Subscribe(e => app.Quit());
-
-                inputSystem.ShowCursor = false;
             };
 
             // Define update function
