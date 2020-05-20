@@ -41,6 +41,12 @@ namespace SDL2Net.Input
             }
         }
 
+        public bool ShowCursor
+        {
+            get => SDL.ShowCursor(-1) == 1;
+            set => SDL.ShowCursor(value ? 1 : 0);
+        }
+
         #region IDisposable Support
 
         private bool _disposed;

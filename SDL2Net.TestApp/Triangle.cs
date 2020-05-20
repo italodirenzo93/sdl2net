@@ -80,6 +80,7 @@ namespace SDL2Net.TestApp
 
             KeyboardMovement(ref dx, ref dy, speedFactor);
             GamePadMovement(ref dx, ref dy, speedFactor);
+            //MouseMovement(ref dx, ref dy);
 
             Position = new Vector2(dx, dy);
         }
@@ -104,6 +105,22 @@ namespace SDL2Net.TestApp
             if (state.IsKeyDown(Key.Up)) dy = y - speed;
 
             if (state.IsKeyDown(Key.Down)) dy = y + speed;
+        }
+
+        private void MouseMovement(ref float dx, ref float dy)
+        {
+            var mouseState = _inputSystem.MouseState;
+            if (mouseState.X == 0 && mouseState.Y == 0) return;
+
+            dx = mouseState.X;
+            dy = mouseState.Y;
+
+            if (mouseState.IsButtonDown(MouseButton.Left))
+                Color = Color.Magenta;
+            if (mouseState.IsButtonDown(MouseButton.Right))
+                Color = Color.GreenYellow;
+            if (mouseState.IsButtonDown(MouseButton.Middle))
+                Color = Color.Crimson;
         }
 
         private void GamePadMovement(ref float dx, ref float dy, float speed)

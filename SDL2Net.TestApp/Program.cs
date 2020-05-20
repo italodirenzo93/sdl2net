@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using System.Reactive.Linq;
 using SDL2Net.Input;
+using SDL2Net.Input.Events;
 using SDL2Net.Video;
 
 // ReSharper disable AccessToDisposedClosure
@@ -35,8 +37,18 @@ namespace SDL2Net.TestApp
             // Put something on the screen
             using var triangle = new Triangle(400, 300, inputSystem);
 
+            // Perform initialization logic like loading assets
+            app.OnInitialize = () =>
+            {
+                inputSystem.Keyboard
+                    .Where(e => e.Key == Key.Escape && e.ButtonState == ButtonState.Pressed)
+                    .Subscribe(e => app.Quit());
+
+                inputSystem.ShowCursor = false;
+            };
+
             // Define update function
-            var lastTime = 0L;
+            var lastTime = app.Elapsed;
             app.OnUpdate = () =>
             {
                 var elapsed = app.Elapsed;
@@ -45,14 +57,10 @@ namespace SDL2Net.TestApp
 
                 // Convert milliseconds to seconds
                 var deltaSeconds = (float) deltaTime / 1000;
-
-                // Quit the app when the Escape key is pressed
-                if (inputSystem.KeyboardState.IsKeyDown(Key.Escape)) app.Quit();
-
                 triangle.Update(deltaSeconds);
 
                 // Draw stuff
-                renderer.DrawColor = Color.CornflowerBlue;
+                renderer.DrawColor = Color.Black;
                 renderer.Clear();
 
                 triangle.Draw(renderer);
@@ -60,6 +68,7 @@ namespace SDL2Net.TestApp
                 renderer.Present();
             };
 
+            // Do some kind of cleanup at app exit like stopping playing music
             app.OnExit = () => Console.WriteLine("exiting composed app...");
 
             // Knock down the dominoes
