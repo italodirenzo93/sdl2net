@@ -1,29 +1,18 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Reactive.Linq;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
+using SDL2Net.Samples.Common;
 using SDL2Net.Video;
 
 // ReSharper disable AccessToDisposedClosure
 
-namespace SDL2Net.TestApp
+namespace SDL2Net.Samples.Composition
 {
     internal class Program
     {
-        private static void Main()
-        {
-            //InheritedApp();
-            ComposedApp();
-        }
-
-        private static void InheritedApp()
-        {
-            using var app = new TestApplication();
-            app.Run();
-        }
-
-        private static void ComposedApp()
+        private static void Main(string[] args)
         {
             // Create app and requested subsystems
             using var app = new SDLApplication();

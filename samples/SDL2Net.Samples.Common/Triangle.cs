@@ -5,7 +5,7 @@ using SDL2Net.Input;
 using SDL2Net.Input.Events;
 using SDL2Net.Video;
 
-namespace SDL2Net.TestApp
+namespace SDL2Net.Samples.Common
 {
     public sealed class Triangle : IDisposable
     {

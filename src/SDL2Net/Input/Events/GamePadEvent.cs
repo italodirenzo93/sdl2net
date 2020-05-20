@@ -8,7 +8,7 @@ namespace SDL2Net.Input.Events
         {
             PlayerIndex = playerIndex;
         }
-        
+
         public int PlayerIndex { get; }
     }
 }

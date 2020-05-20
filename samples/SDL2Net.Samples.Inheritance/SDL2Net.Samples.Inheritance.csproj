@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DefineConstants>TRACE</DefineConstants>
+        <DefineConstants>TRACE</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SDL2Net\SDL2Net.csproj" />
+        <ProjectReference Include="..\..\src\SDL2Net\SDL2Net.csproj"/>
+        <ProjectReference Include="..\SDL2Net.Samples.Common\SDL2Net.Samples.Common.csproj"/>
     </ItemGroup>
 
 </Project>

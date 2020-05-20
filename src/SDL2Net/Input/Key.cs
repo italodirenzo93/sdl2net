@@ -145,7 +145,9 @@ namespace SDL2Net.Input
         International2 = 136,
         International3 = 137,
 
-        /**< Yen */
+        /**
+         * < Yen
+         */
         International4 = 138,
         International5 = 139,
         International6 = 140,
@@ -154,34 +156,54 @@ namespace SDL2Net.Input
         International9 = 143,
         Lang1 = 144,
 
-        /**< Hangul/English toggle */
+        /**
+         * < Hangul/ English toggle
+         */
         Lang2 = 145,
 
-        /**< Hanja conversion */
+        /**
+         * < Hanja conversion
+         */
         Lang3 = 146,
 
-        /**< Katakana */
+        /**
+         * < Katakana
+         */
         Lang4 = 147,
 
-        /**< Hiragana */
+        /**
+         * < Hiragana
+         */
         Lang5 = 148,
 
-        /**< Zenkaku/Hankaku */
+        /**
+         * < Zenkaku/ Hankaku
+         */
         Lang6 = 149,
 
-        /**< reserved */
+        /**
+         * < reserved
+         */
         Lang7 = 150,
 
-        /**< reserved */
+        /**
+         * < reserved
+         */
         Lang8 = 151,
 
-        /**< reserved */
+        /**
+         * < reserved
+         */
         Lang9 = 152,
 
-        /**< reserved */
+        /**
+         * < reserved
+         */
         Alterase = 153,
 
-        /**< Erase-Eaze */
+        /**
+         * < Erase-Eaze
+         */
         Sysreq = 154,
         Cancel = 155,
         Clear = 156,
@@ -245,18 +267,26 @@ namespace SDL2Net.Input
         Lshift = 225,
         Lalt = 226,
 
-        /**< alt, option */
+        /**
+         * < alt, option
+         */
         Lgui = 227,
 
-        /**< windows, command (apple), meta */
+        /**
+         * < windows, command ( apple), meta
+         */
         Rctrl = 228,
         Rshift = 229,
         Ralt = 230,
 
-        /**< alt gr, option */
+        /**
+         * < alt gr, option
+         */
         Rgui = 231,
 
-        /**< windows, command (apple), meta */
+        /**
+         * < windows, command ( apple), meta
+         */
         Mode = 257,
 
         Audionext = 258,

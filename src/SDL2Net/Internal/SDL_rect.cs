@@ -8,14 +8,14 @@ namespace SDL2Net.Internal
         public int x;
         public int y;
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
     internal struct SDL_FPoint
     {
         public float x;
         public float y;
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
     internal struct SDL_Rect
     {
