@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Net", "SDL2Net\SDL2Net.csproj", "{10D139B3-93F8-412D-A16D-1E26E2C39FBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net", "src\SDL2Net\SDL2Net.csproj", "{39D1FB6A-CB5F-4C47-9075-E5B7405DE45D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Net.TestApp", "SDL2Net.TestApp\SDL2Net.TestApp.csproj", "{3DFEA325-C649-4D61-B2D2-8A06A5418320}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{865C0042-094D-46AC-99E4-E586081BBDDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net.Samples.Inheritance", "samples\SDL2Net.Samples.Inheritance\SDL2Net.Samples.Inheritance.csproj", "{FE2685CA-42DE-4787-8BF7-99646D650E2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net.Samples.Common", "samples\SDL2Net.Samples.Common\SDL2Net.Samples.Common.csproj", "{C622E16E-5516-47A0-B895-0F11F78AE64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net.Samples.Composition", "samples\SDL2Net.Samples.Composition\SDL2Net.Samples.Composition.csproj", "{7D6A74C9-FE1F-40F6-A19E-C1B62187B2B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,19 +19,32 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10D139B3-93F8-412D-A16D-1E26E2C39FBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DFEA325-C649-4D61-B2D2-8A06A5418320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DFEA325-C649-4D61-B2D2-8A06A5418320}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DFEA325-C649-4D61-B2D2-8A06A5418320}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3DFEA325-C649-4D61-B2D2-8A06A5418320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39D1FB6A-CB5F-4C47-9075-E5B7405DE45D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D1FB6A-CB5F-4C47-9075-E5B7405DE45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D1FB6A-CB5F-4C47-9075-E5B7405DE45D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D1FB6A-CB5F-4C47-9075-E5B7405DE45D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE2685CA-42DE-4787-8BF7-99646D650E2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE2685CA-42DE-4787-8BF7-99646D650E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE2685CA-42DE-4787-8BF7-99646D650E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE2685CA-42DE-4787-8BF7-99646D650E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C622E16E-5516-47A0-B895-0F11F78AE64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C622E16E-5516-47A0-B895-0F11F78AE64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C622E16E-5516-47A0-B895-0F11F78AE64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C622E16E-5516-47A0-B895-0F11F78AE64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D6A74C9-FE1F-40F6-A19E-C1B62187B2B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D6A74C9-FE1F-40F6-A19E-C1B62187B2B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D6A74C9-FE1F-40F6-A19E-C1B62187B2B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D6A74C9-FE1F-40F6-A19E-C1B62187B2B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86282283-1A79-41AD-B8B5-2DC282B46850}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE2685CA-42DE-4787-8BF7-99646D650E2F} = {865C0042-094D-46AC-99E4-E586081BBDDB}
+		{C622E16E-5516-47A0-B895-0F11F78AE64A} = {865C0042-094D-46AC-99E4-E586081BBDDB}
+		{7D6A74C9-FE1F-40F6-A19E-C1B62187B2B8} = {865C0042-094D-46AC-99E4-E586081BBDDB}
 	EndGlobalSection
 EndGlobal

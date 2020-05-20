@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\SDL2Net\SDL2Net.csproj"/>
+        <ProjectReference Include="..\SDL2Net.Samples.Common\SDL2Net.Samples.Common.csproj"/>
+    </ItemGroup>
+
+</Project>

@@ -4,6 +4,6 @@ namespace SDL2Net.Events
 {
     public abstract class Event
     {
-        public DateTimeOffset Timestamp { get; }  = DateTimeOffset.UtcNow;
+        public DateTimeOffset Timestamp { get; } = DateTimeOffset.UtcNow;
     }
 }

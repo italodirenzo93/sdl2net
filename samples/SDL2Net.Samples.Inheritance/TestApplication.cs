@@ -4,9 +4,10 @@ using System.Reactive.Linq;
 using SDL2Net.Events;
 using SDL2Net.Input;
 using SDL2Net.Input.Events;
+using SDL2Net.Samples.Common;
 using SDL2Net.Video;
 
-namespace SDL2Net.TestApp
+namespace SDL2Net.Samples.Inheritance
 {
     public sealed class TestApplication : SDLApplication
     {

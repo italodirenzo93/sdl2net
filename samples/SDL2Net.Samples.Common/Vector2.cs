@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace SDL2Net.TestApp
+namespace SDL2Net.Inheritence
 {
     public struct Vector2
     {
