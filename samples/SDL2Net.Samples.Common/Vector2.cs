@@ -1,17 +1,17 @@
 using System.Drawing;
 
-namespace SDL2Net.Inheritence
+namespace SDL2Net.Samples.Common
 {
-    public struct Vector2
+    public readonly struct Vector2
     {
-        public readonly float X;
-        public readonly float Y;
-
         public Vector2(float x, float y)
         {
             X = x;
             Y = y;
         }
+        
+        public float X { get; }
+        public float Y { get; }
 
         public Point ToPoint()
         {
