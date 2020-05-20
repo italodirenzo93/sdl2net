@@ -1,20 +1,21 @@
 using System;
 using SDL2Net.Input;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Internal
 {
     internal static partial class SDL
     {
-        public delegate int SDL_NumJoysticks();
-
-        public static readonly SDL_NumJoysticks NumJoysticks =
-            Util.LoadFunction<SDL_NumJoysticks>(NativeLibrary, nameof(SDL_NumJoysticks));
-        
         public delegate void SDL_GameControllerClose(IntPtr gameController);
 
         public delegate byte SDL_GameControllerGetButton(IntPtr gameController, GamePadButton button);
 
         public delegate IntPtr SDL_GameControllerOpen(int joystickIndex);
+
+        public delegate int SDL_NumJoysticks();
+
+        public static readonly SDL_NumJoysticks NumJoysticks =
+            Util.LoadFunction<SDL_NumJoysticks>(NativeLibrary, nameof(SDL_NumJoysticks));
 
         public static readonly SDL_GameControllerOpen GameControllerOpen =
             Util.LoadFunction<SDL_GameControllerOpen>(NativeLibrary, nameof(SDL_GameControllerOpen));

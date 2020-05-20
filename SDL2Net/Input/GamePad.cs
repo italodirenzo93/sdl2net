@@ -1,52 +1,60 @@
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using SDL2Net.Events;
 using SDL2Net.Input.Events;
 using SDL2Net.Internal;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Input
 {
-    public class GamePad : IDisposable, IObservable<GamePadEvent>
+    /// <summary>
+    ///     Represents a currently connected gamepad.
+    /// </summary>
+    public class GamePad : IDisposable, IObservable<GamePadEvent>, IEquatable<GamePad>
     {
+        private readonly GamePadSystem _system;
         internal readonly IntPtr GamePadPtr;
 
-        public GamePad(int playerIndex)
+        public GamePad(GamePadSystem system, int playerIndex)
         {
+            _system = system;
             PlayerIndex = playerIndex;
-            Util.ThrowIfFailed(SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER));
             GamePadPtr = SDL.GameControllerOpen(playerIndex);
             Util.ThrowIfFailed(GamePadPtr);
         }
 
-        public static IObservable<GamePadEvent> Events => SDLApplication.Events.OfType<GamePadEvent>().AsObservable();
-
-        public static int Count => SDL.NumJoysticks();
-        
+        /// <summary>
+        ///     The player that this gamepad belongs to.
+        /// </summary>
         public int PlayerIndex { get; }
 
+        public IDisposable Subscribe(IObserver<GamePadEvent> observer)
+        {
+            return _system.Events.Subscribe(observer);
+        }
+
+        /// <summary>
+        ///     Detect if the provided button is currently pressed down on the gamepad.
+        /// </summary>
+        /// <param name="button">The button to query</param>
+        /// <returns>True if down. False otherwise.</returns>
         public bool IsButtonDown(GamePadButton button)
         {
             return SDL.GameControllerGetButton(GamePadPtr, button) == 1;
         }
-        
-        public IDisposable Subscribe(IObserver<GamePadEvent> observer)
-        {
-            return Events.Where(e => e.PlayerIndex == PlayerIndex).Subscribe(observer);
-        }
 
         #region IDisposable Support
-        
+
         private bool _disposed;
 
         protected virtual void Dispose(bool disposing)
         {
+            Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(GamePad), disposing);
+
             if (_disposed) return;
             if (disposing)
             {
             }
+
             SDL.GameControllerClose(GamePadPtr);
-            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER);
             _disposed = true;
         }
 
@@ -59,6 +67,33 @@ namespace SDL2Net.Input
         ~GamePad()
         {
             Dispose(false);
+        }
+
+        #endregion
+
+        #region IEquatable Support
+
+        public bool Equals(GamePad? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return GamePadPtr.Equals(other.GamePadPtr) && PlayerIndex == other.PlayerIndex;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((GamePad) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (GamePadPtr.GetHashCode() * 397) ^ PlayerIndex;
+            }
         }
 
         #endregion

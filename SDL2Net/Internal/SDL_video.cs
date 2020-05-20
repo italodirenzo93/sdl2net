@@ -1,4 +1,5 @@
 using System;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Internal
 {
@@ -90,66 +91,66 @@ namespace SDL2Net.Internal
     {
         public delegate IntPtr SDL_CreateWindow(string title, int x, int y, int w, int h, SDL_WindowFlags flags);
 
+        public delegate void SDL_DestroyWindow(IntPtr window);
+
+        public delegate SDL_WindowFlags SDL_GetWindowFlags(IntPtr window);
+
+        public delegate void SDL_GetWindowPosition(IntPtr window, out int x, out int y);
+
+        public delegate void SDL_GetWindowSize(IntPtr window, out int x, out int y);
+
+        public delegate IntPtr SDL_GetWindowTitle(IntPtr window);
+
+        public delegate void SDL_HideWindow(IntPtr window);
+
+        public delegate void SDL_SetWindowPosition(IntPtr window, int x, int y);
+
+        public delegate void SDL_SetWindowResizable(IntPtr window, int resizable);
+
+        public delegate void SDL_SetWindowSize(IntPtr window, int x, int y);
+
+        public delegate void SDL_SetWindowTitle(IntPtr window, string title);
+
+        public delegate int SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags flags, string title, string message,
+            IntPtr window);
+
+        public delegate void SDL_ShowWindow(IntPtr window);
+
         public static readonly SDL_CreateWindow CreateWindow =
             Util.LoadFunction<SDL_CreateWindow>(NativeLibrary, nameof(SDL_CreateWindow));
-
-        public delegate void SDL_DestroyWindow(IntPtr window);
 
         public static readonly SDL_DestroyWindow DestroyWindow =
             Util.LoadFunction<SDL_DestroyWindow>(NativeLibrary, nameof(SDL_DestroyWindow));
 
-        public delegate void SDL_ShowWindow(IntPtr window);
-
         public static readonly SDL_ShowWindow ShowWindow =
             Util.LoadFunction<SDL_ShowWindow>(NativeLibrary, nameof(SDL_ShowWindow));
-
-        public delegate void SDL_HideWindow(IntPtr window);
 
         public static readonly SDL_HideWindow HideWindow =
             Util.LoadFunction<SDL_HideWindow>(NativeLibrary, nameof(SDL_HideWindow));
 
-        public delegate IntPtr SDL_GetWindowTitle(IntPtr window);
-
         public static readonly SDL_GetWindowTitle GetWindowTitle =
             Util.LoadFunction<SDL_GetWindowTitle>(NativeLibrary, nameof(SDL_GetWindowTitle));
-
-        public delegate void SDL_SetWindowTitle(IntPtr window, string title);
 
         public static readonly SDL_SetWindowTitle SetWindowTitle =
             Util.LoadFunction<SDL_SetWindowTitle>(NativeLibrary, nameof(SDL_SetWindowTitle));
 
-        public delegate void SDL_GetWindowPosition(IntPtr window, out int x, out int y);
-
         public static readonly SDL_GetWindowPosition GetWindowPosition =
             Util.LoadFunction<SDL_GetWindowPosition>(NativeLibrary, nameof(SDL_GetWindowPosition));
-
-        public delegate void SDL_SetWindowPosition(IntPtr window, int x, int y);
 
         public static readonly SDL_SetWindowPosition SetWindowPosition =
             Util.LoadFunction<SDL_SetWindowPosition>(NativeLibrary, nameof(SDL_SetWindowPosition));
 
-        public delegate void SDL_GetWindowSize(IntPtr window, out int x, out int y);
-
         public static readonly SDL_GetWindowSize GetWindowSize =
             Util.LoadFunction<SDL_GetWindowSize>(NativeLibrary, nameof(SDL_GetWindowSize));
-
-        public delegate void SDL_SetWindowSize(IntPtr window, int x, int y);
 
         public static readonly SDL_SetWindowSize SetWindowSize =
             Util.LoadFunction<SDL_SetWindowSize>(NativeLibrary, nameof(SDL_SetWindowPosition));
 
-        public delegate SDL_WindowFlags SDL_GetWindowFlags(IntPtr window);
-
         public static readonly SDL_GetWindowFlags GetWindowFlags =
             Util.LoadFunction<SDL_GetWindowFlags>(NativeLibrary, nameof(SDL_GetWindowFlags));
 
-        public delegate void SDL_SetWindowResizable(IntPtr window, int resizable);
-
         public static readonly SDL_SetWindowResizable SetWindowResizable =
             Util.LoadFunction<SDL_SetWindowResizable>(NativeLibrary, nameof(SDL_SetWindowResizable));
-
-        public delegate int SDL_ShowSimpleMessageBox(SDL_MessageBoxFlags flags, string title, string message,
-            IntPtr window);
 
         public static readonly SDL_ShowSimpleMessageBox ShowSimpleMessageBox =
             Util.LoadFunction<SDL_ShowSimpleMessageBox>(NativeLibrary, nameof(SDL_ShowSimpleMessageBox));

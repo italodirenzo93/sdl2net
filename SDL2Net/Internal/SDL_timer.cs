@@ -1,3 +1,5 @@
+using SDL2Net.Utilities;
+
 namespace SDL2Net.Internal
 {
     internal static partial class SDL
