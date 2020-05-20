@@ -6,6 +6,9 @@ using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net
 {
+    /// <summary>
+    ///     Utility class for displaying message boxes.
+    /// </summary>
     public static class MessageBox
     {
         public static void ShowInformation(string title, string message, Window? window = null)

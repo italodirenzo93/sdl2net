@@ -7,6 +7,9 @@ using SDL2Net.Utilities;
 
 namespace SDL2Net.Input
 {
+    /// <summary>
+    ///     SDL Input subsystem. https://wiki.libsdl.org/CategoryEvents
+    /// </summary>
     public class InputSystem : IDisposable
     {
         private readonly SDLApplication _app;
@@ -21,6 +24,9 @@ namespace SDL2Net.Input
 
         public IObservable<KeyPressEvent> Keyboard => _app.OfType<KeyPressEvent>().AsObservable();
 
+        /// <summary>
+        ///     Snapshot of the current keyboard state.
+        /// </summary>
         public KeyboardState KeyboardState
         {
             get
@@ -32,6 +38,9 @@ namespace SDL2Net.Input
             }
         }
 
+        /// <summary>
+        ///     Snapshot of the current mouse state.
+        /// </summary>
         public MouseState MouseState
         {
             get
@@ -41,6 +50,9 @@ namespace SDL2Net.Input
             }
         }
 
+        /// <summary>
+        ///     Get or set the visibility of the mouse cursor
+        /// </summary>
         public bool ShowCursor
         {
             get => SDL.ShowCursor(-1) == 1;

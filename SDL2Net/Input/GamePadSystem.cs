@@ -8,6 +8,9 @@ using SDL2Net.Utilities;
 
 namespace SDL2Net.Input
 {
+    /// <summary>
+    ///     SDL GameController subsystem. https://wiki.libsdl.org/CategoryGameController
+    /// </summary>
     public class GamePadSystem : IDisposable
     {
         private readonly SDLApplication _app;
@@ -26,6 +29,9 @@ namespace SDL2Net.Input
             Events.OfType<GamePadConnectionEvent>().Subscribe(GamePadAddedOrRemoved);
         }
 
+        /// <summary>
+        ///     The number of currently connected joysticks.
+        /// </summary>
         public int NumConnected => SDL.NumJoysticks();
 
         public IObservable<GamePad> ConnectedPads => _gamepads.ToObservable();

@@ -5,6 +5,9 @@ using SDL2Net.Utilities;
 
 namespace SDL2Net.Input
 {
+    /// <summary>
+    ///     Represents a currently connected gamepad.
+    /// </summary>
     public class GamePad : IDisposable, IObservable<GamePadEvent>, IEquatable<GamePad>
     {
         private readonly GamePadSystem _system;
@@ -18,6 +21,9 @@ namespace SDL2Net.Input
             Util.ThrowIfFailed(GamePadPtr);
         }
 
+        /// <summary>
+        ///     The player that this gamepad belongs to.
+        /// </summary>
         public int PlayerIndex { get; }
 
         public IDisposable Subscribe(IObserver<GamePadEvent> observer)
@@ -25,6 +31,11 @@ namespace SDL2Net.Input
             return _system.Events.Subscribe(observer);
         }
 
+        /// <summary>
+        ///     Detect if the provided button is currently pressed down on the gamepad.
+        /// </summary>
+        /// <param name="button">The button to query</param>
+        /// <returns>True if down. False otherwise.</returns>
         public bool IsButtonDown(GamePadButton button)
         {
             return SDL.GameControllerGetButton(GamePadPtr, button) == 1;

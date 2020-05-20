@@ -9,6 +9,9 @@ using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net
 {
+    /// <summary>
+    ///     SDL Application context. https://wiki.libsdl.org/CategoryInit
+    /// </summary>
     public class SDLApplication : IDisposable, IObservable<Event>
     {
         private static bool _instantiated;
@@ -18,6 +21,10 @@ namespace SDL2Net
         private SDL_Event _event;
         private bool _running = true;
 
+        /// <summary>
+        ///     Initializes SDL and encapsulates the main runtime loop.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">More than one <see cref="SDLApplication" /> exist at a time</exception>
         public SDLApplication()
         {
             // This is kind of hack to get around the problem needing to be able to access
