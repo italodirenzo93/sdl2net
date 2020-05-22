@@ -27,12 +27,19 @@ namespace SDL2Net.Samples.Composition
             using var triangle = new Triangle(400, 300, inputSystem);
 
             // Perform initialization logic like loading assets
-            app.OnInitialize = () =>
+            inputSystem.Keyboard
+                .Where(e => e.Key == Key.Escape && e.ButtonState == ButtonState.Pressed)
+                .Subscribe(e => app.Quit());
+
+            // Load bitmap image from argv
+            Texture? texture = null;
+            if (args.Length > 0)
             {
-                inputSystem.Keyboard
-                    .Where(e => e.Key == Key.Escape && e.ButtonState == ButtonState.Pressed)
-                    .Subscribe(e => app.Quit());
-            };
+                using var surface = new Surface(args[0]);
+                Console.WriteLine($"Surface width: {surface.Width}");
+                Console.WriteLine($"Surface height: {surface.Height}");
+                texture = new Texture(renderer, surface);
+            }
 
             // Define update function
             var lastTime = app.Elapsed;
@@ -50,13 +57,20 @@ namespace SDL2Net.Samples.Composition
                 renderer.DrawColor = Color.Black;
                 renderer.Clear();
 
-                triangle.Draw(renderer);
+                if (texture != null)
+                    renderer.CopyTexture(texture);
+                else
+                    triangle.Draw(renderer);
 
                 renderer.Present();
             };
 
             // Do some kind of cleanup at app exit like stopping playing music
-            app.OnExit = () => Console.WriteLine("exiting composed app...");
+            app.OnExit = () =>
+            {
+                texture?.Dispose();
+                Console.WriteLine("exiting composed app...");
+            };
 
             // Knock down the dominoes
             app.Run();

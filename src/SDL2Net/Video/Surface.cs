@@ -1,5 +1,8 @@
 using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using SDL2Net.Internal;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Video
 {
@@ -11,18 +14,22 @@ namespace SDL2Net.Video
         {
             SurfacePtr = SDL.CreateRgbSurface(0, width, height, depth, (uint) rMask, (uint) gMask, (uint) bMask,
                 (uint) aMask);
-            if (SurfacePtr == IntPtr.Zero) throw new SDLException();
-
-            Width = width;
-            Height = height;
-            Depth = depth;
+            Util.ThrowIfFailed(SurfacePtr);
         }
 
-        public int Width { get; }
+        public Surface(string fileName)
+        {
+            if (!File.Exists(fileName)) throw new FileNotFoundException("Bitmap file does not exist", fileName);
 
-        public int Height { get; }
+            SurfacePtr = SDL.LoadBmpRw(SDL.RwFromFile(fileName, "rb"), 1);
+            Util.ThrowIfFailed(SurfacePtr);
+        }
 
-        public int Depth { get; }
+        public int Width => SdlSurface.w;
+
+        public int Height => SdlSurface.h;
+
+        private SDL_Surface SdlSurface => Marshal.PtrToStructure<SDL_Surface>(SurfacePtr);
 
         #region IDisposable Support
 
@@ -32,6 +39,7 @@ namespace SDL2Net.Video
         {
             if (_disposed) return;
 
+            Util.OutputDebugString($"Disposing Surface: disposing = {disposing}");
             SDL.FreeSurface(SurfacePtr);
 
             _disposed = true;

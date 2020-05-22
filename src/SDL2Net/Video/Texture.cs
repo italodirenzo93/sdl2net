@@ -1,71 +1,10 @@
 using System;
 using System.Drawing;
 using SDL2Net.Internal;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Video
 {
-    public enum PixelFormat : uint
-    {
-        Unknown,
-        Index1Lsb,
-        Index1msb,
-        Index4Lsb,
-        Index4Msb,
-        Index8,
-        Rgb332,
-        Rgb444,
-        Rgb555,
-        Bgr555,
-        Argb4444,
-        Rgba4444,
-        Abgr4444,
-        Bgra4444,
-        Argb1555,
-        Rgba5551,
-        Abgr1555,
-        Bgra5551,
-        Rgb565,
-        Bgr565,
-        Rgb24,
-        Bgr24,
-        Rgb888,
-        Rgbx8888,
-        Bgr888,
-        Bgrx8888,
-        Argb8888,
-        Rgba8888,
-        Abgr8888,
-        Bgra8888,
-        Argb2101010,
-        Rgba32,
-        Argb32,
-        Bgra32,
-        Abgr32,
-        Yv12,
-        Iyuv,
-        Yuy2,
-        Uyuy,
-        Yvyu,
-        Nv12,
-        Nv21
-    }
-
-    public enum PixelType
-    {
-        Unknown,
-        Index1,
-        Index4,
-        Index8,
-        Packed8,
-        Packed16,
-        Packed32,
-        ArrayU8,
-        ArrayU16,
-        ArrayU32,
-        ArrayF16,
-        ArrayF32
-    }
-
     public enum TextureAccess
     {
         Static,
@@ -83,9 +22,16 @@ namespace SDL2Net.Video
         public Texture(Renderer renderer, PixelFormat format, TextureAccess access, int width, int height)
         {
             TexturePtr = SDL.CreateTexture(renderer.RendererPtr, (uint) format, (int) access, width, height);
+            Util.ThrowIfFailed(TexturePtr);
             Width = width;
             Height = height;
             TextureAccess = access;
+        }
+
+        public Texture(Renderer renderer, Surface surface)
+        {
+            TexturePtr = SDL.CreateTextureFromSurface(renderer.RendererPtr, surface.SurfacePtr);
+            Util.ThrowIfFailed(TexturePtr);
         }
 
         /// <summary>
@@ -146,9 +92,7 @@ namespace SDL2Net.Video
         {
             if (_disposed) return;
 
-            if (disposing)
-            {
-            }
+            Util.OutputDebugString($"Disposing Texture: disposing = {disposing}");
 
             SDL.DestroyTexture(TexturePtr);
 

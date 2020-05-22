@@ -36,6 +36,8 @@ namespace SDL2Net.Internal
     {
         public delegate IntPtr SDL_CreateTexture(IntPtr renderer, uint format, int access, int w, int h);
 
+        public delegate IntPtr SDL_CreateTextureFromSurface(IntPtr renderer, IntPtr surface);
+
         public delegate void SDL_DestroyTexture(IntPtr texture);
 
         public delegate int SDL_LockTexture(IntPtr texture, [In] SDL_Rect rect, out IntPtr pixels, out int pitch);
@@ -48,6 +50,9 @@ namespace SDL2Net.Internal
 
         public static readonly SDL_CreateTexture CreateTexture =
             Util.LoadFunction<SDL_CreateTexture>(NativeLibrary, nameof(SDL_CreateTexture));
+
+        public static readonly SDL_CreateTextureFromSurface CreateTextureFromSurface =
+            Util.LoadFunction<SDL_CreateTextureFromSurface>(NativeLibrary, nameof(SDL_CreateTextureFromSurface));
 
         public static readonly SDL_DestroyTexture DestroyTexture =
             Util.LoadFunction<SDL_DestroyTexture>(NativeLibrary, nameof(SDL_DestroyTexture));

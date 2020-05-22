@@ -26,10 +26,15 @@ namespace SDL2Net.Internal
             uint gmask,
             uint bmask, uint amask);
 
+        public delegate IntPtr SDL_LoadBMP_RW(IntPtr src, int freeSrc);
+
         public delegate void SDL_FreeSurface(IntPtr surface);
 
         public static readonly SDL_CreateRGBSurface CreateRgbSurface =
             Util.LoadFunction<SDL_CreateRGBSurface>(NativeLibrary, nameof(SDL_CreateRGBSurface));
+
+        public static readonly SDL_LoadBMP_RW LoadBmpRw =
+            Util.LoadFunction<SDL_LoadBMP_RW>(NativeLibrary, nameof(SDL_LoadBMP_RW));
 
         public static readonly SDL_FreeSurface FreeSurface =
             Util.LoadFunction<SDL_FreeSurface>(NativeLibrary, nameof(SDL_FreeSurface));
