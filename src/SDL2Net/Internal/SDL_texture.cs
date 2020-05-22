@@ -4,6 +4,34 @@ using SDL2Net.Utilities;
 
 namespace SDL2Net.Internal
 {
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SDL_PixelFormat
+    {
+        public uint format;
+        public IntPtr palette;
+        public byte bitsPerPixel, bytesPerPixel;
+        public uint rMask, gMask, bMask, aMask;
+        public byte rLoss, gLoss, bLoss, aLoss;
+        public byte rShift, gShift, bShift, aShift;
+        public int refCount;
+        public IntPtr next;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SDL_Palette
+    {
+        public int nColors;
+        public IntPtr colors;
+        public uint version;
+        public int refCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SDL_Color
+    {
+        public byte r, g, b, a;
+    }
+
     internal static partial class SDL
     {
         public delegate IntPtr SDL_CreateTexture(IntPtr renderer, uint format, int access, int w, int h);
