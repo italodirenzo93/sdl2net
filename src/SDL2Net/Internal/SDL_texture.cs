@@ -40,6 +40,8 @@ namespace SDL2Net.Internal
 
         public delegate void SDL_DestroyTexture(IntPtr texture);
 
+        public delegate int SDL_QueryTexture(IntPtr texture, out IntPtr format, out int access, out int w, out int h);
+
         public delegate int SDL_LockTexture(IntPtr texture, [In] SDL_Rect rect, out IntPtr pixels, out int pitch);
 
         public delegate int SDL_MapRGB(IntPtr pixelFormat, int r, int g, int b);
@@ -56,6 +58,9 @@ namespace SDL2Net.Internal
 
         public static readonly SDL_DestroyTexture DestroyTexture =
             Util.LoadFunction<SDL_DestroyTexture>(NativeLibrary, nameof(SDL_DestroyTexture));
+
+        public static readonly SDL_QueryTexture QueryTexture =
+            Util.LoadFunction<SDL_QueryTexture>(NativeLibrary, nameof(SDL_QueryTexture));
 
         public static readonly SDL_LockTexture LockTexture =
             Util.LoadFunction<SDL_LockTexture>(NativeLibrary, nameof(SDL_LockTexture));

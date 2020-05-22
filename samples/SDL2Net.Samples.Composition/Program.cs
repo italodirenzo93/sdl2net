@@ -20,7 +20,10 @@ namespace SDL2Net.Samples.Composition
             using var gamepadSystem = new GamePadSystem(app);
 
             // Create window and 2D renderer
-            using var window = new Window("Hello!", 200, 200, 800, 600);
+            using var window = new Window("Hello!", 200, 200, 800, 600)
+            {
+                Resizable = true
+            };
             using var renderer = new Renderer(window);
 
             // Put something on the screen
@@ -50,7 +53,7 @@ namespace SDL2Net.Samples.Composition
                 lastTime = elapsed;
 
                 // Convert milliseconds to seconds
-                var deltaSeconds = (float) deltaTime / 1000;
+                var deltaSeconds = (float)deltaTime / 1000;
                 triangle.Update(deltaSeconds);
 
                 // Draw stuff

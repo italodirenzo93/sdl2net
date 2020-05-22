@@ -21,11 +21,8 @@ namespace SDL2Net.Video
 
         public Texture(Renderer renderer, PixelFormat format, TextureAccess access, int width, int height)
         {
-            TexturePtr = SDL.CreateTexture(renderer.RendererPtr, (uint) format, (int) access, width, height);
+            TexturePtr = SDL.CreateTexture(renderer.RendererPtr, (uint)format, (int)access, width, height);
             Util.ThrowIfFailed(TexturePtr);
-            Width = width;
-            Height = height;
-            TextureAccess = access;
         }
 
         public Texture(Renderer renderer, Surface surface)
@@ -37,17 +34,41 @@ namespace SDL2Net.Video
         /// <summary>
         ///     The width of this texture in pixels.
         /// </summary>
-        public int Width { get; }
+        public int Width
+        {
+            get
+            {
+                var result = SDL.QueryTexture(TexturePtr, out IntPtr format, out var access, out var w, out var h);
+                Util.ThrowIfFailed(result);
+                return w;
+            }
+        }
 
         /// <summary>
         ///     The height of this texture in pixels.
         /// </summary>
-        public int Height { get; }
+        public int Height
+        {
+            get
+            {
+                var result = SDL.QueryTexture(TexturePtr, out IntPtr format, out var access, out var w, out var h);
+                Util.ThrowIfFailed(result);
+                return h;
+            }
+        }
 
         /// <summary>
         ///     The access pattern used for this texture.
         /// </summary>
-        public TextureAccess TextureAccess { get; }
+        public TextureAccess TextureAccess
+        {
+            get
+            {
+                var result = SDL.QueryTexture(TexturePtr, out IntPtr format, out var access, out var w, out var h);
+                Util.ThrowIfFailed(result);
+                return (TextureAccess)access;
+            }
+        }
 
         /// <summary>
         ///     Whether this texture is currently locked for writing.

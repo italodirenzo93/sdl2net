@@ -40,7 +40,7 @@ namespace SDL2Net.Video
         {
             RendererPtr = SDL.CreateRenderer(window.WindowPtr, -1, SDL_RENDERER_ACCELERATED);
             ThrowIfFailed(RendererPtr);
-            SDL.SetHint(HintRenderScaleQuality, ((int)ScaleQuality.Nearest).ToString());
+            //SDL.SetHint(HintRenderScaleQuality, ((int)ScaleQuality.Nearest).ToString());
         }
 
         /// <summary>
@@ -137,12 +137,12 @@ namespace SDL2Net.Video
 
         private static SDL_Rect GetRectOrDefault(Texture texture, Rectangle? rectangle)
         {
-            return rectangle?.ToSdlRect() ?? new SDL_Rect {x = 0, y = 0, w = texture.Width, h = texture.Height};
+            return rectangle?.ToSdlRect() ?? new SDL_Rect { x = 0, y = 0, w = texture.Width, h = texture.Height };
         }
 
         private static SDL_Point GetPointOrDefault(Texture texture, Point? point)
         {
-            return point?.ToSdlPoint() ?? new SDL_Point {x = texture.Width / 2, y = texture.Height / 2};
+            return point?.ToSdlPoint() ?? new SDL_Point { x = texture.Width / 2, y = texture.Height / 2 };
         }
 
         #region IDisposable Support
