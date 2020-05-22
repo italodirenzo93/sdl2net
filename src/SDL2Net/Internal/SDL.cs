@@ -43,6 +43,12 @@ namespace SDL2Net.Internal
 
         public delegate SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
 
+        public delegate IntPtr SDL_GetHint(string name);
+
+        public delegate int SDL_SetHint(string name, string value);
+
+        public delegate IntPtr SDL_RWFromFile(string file, string mode);
+
         public static readonly SDL_Init Init = Util.LoadFunction<SDL_Init>(NativeLibrary, nameof(SDL_Init));
 
         public static readonly SDL_InitSubSystem InitSubSystem =
@@ -54,6 +60,12 @@ namespace SDL2Net.Internal
             Util.LoadFunction<SDL_QuitSubSystem>(NativeLibrary, nameof(SDL_QuitSubSystem));
 
         public static readonly SDL_WasInit WasInit = Util.LoadFunction<SDL_WasInit>(NativeLibrary, nameof(SDL_WasInit));
+
+        public static readonly SDL_GetHint GetHint = Util.LoadFunction<SDL_GetHint>(NativeLibrary, nameof(SDL_GetHint));
+
+        public static readonly SDL_SetHint SetHint = Util.LoadFunction<SDL_SetHint>(NativeLibrary, nameof(SDL_SetHint));
+
+        public static readonly SDL_RWFromFile RwFromFile = Util.LoadFunction<SDL_RWFromFile>(NativeLibrary, nameof(SDL_RWFromFile));
 
         internal static IntPtr NativeLibrary => Util.CurrentPlatform switch
         {

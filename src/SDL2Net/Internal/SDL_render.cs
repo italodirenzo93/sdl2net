@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using SDL2Net.Utilities;
+using SDL2Net.Video;
 
 namespace SDL2Net.Internal
 {
@@ -38,6 +39,11 @@ namespace SDL2Net.Internal
 
         public delegate int SDL_RenderClear(IntPtr renderer);
 
+        public delegate int SDL_RenderCopy(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest);
+
+        public delegate int SDL_RenderCopyEx(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest,
+            double angle, [In] SDL_Point center, RenderFlip flip);
+
         public delegate int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
 
         public delegate int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
@@ -72,5 +78,11 @@ namespace SDL2Net.Internal
 
         public static readonly SDL_RenderDrawLines RenderDrawLines =
             Util.LoadFunction<SDL_RenderDrawLines>(NativeLibrary, nameof(SDL_RenderDrawLines));
+
+        public static readonly SDL_RenderCopy RenderCopy =
+            Util.LoadFunction<SDL_RenderCopy>(NativeLibrary, nameof(SDL_RenderCopy));
+
+        public static readonly SDL_RenderCopyEx RenderCopyEx =
+            Util.LoadFunction<SDL_RenderCopyEx>(NativeLibrary, nameof(SDL_RenderCopyEx));
     }
 }

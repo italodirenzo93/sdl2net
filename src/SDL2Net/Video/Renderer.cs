@@ -8,11 +8,28 @@ using static SDL2Net.Utilities.Util;
 
 namespace SDL2Net.Video
 {
+    [Flags]
+    public enum RenderFlip
+    {
+        None,
+        Horizontal,
+        Vertical
+    }
+
+    public enum ScaleQuality
+    {
+        Nearest = 0,
+        Linear = 1,
+        Best = 2
+    }
+
     /// <summary>
     ///     SDL Renderer object. https://wiki.libsdl.org/CategoryRender
     /// </summary>
     public class Renderer : IDisposable
     {
+        private const string HintRenderScaleQuality = "SDL_RENDER_SCALE_QUALITY";
+
         internal readonly IntPtr RendererPtr;
 
         /// <summary>
@@ -23,6 +40,7 @@ namespace SDL2Net.Video
         {
             RendererPtr = SDL.CreateRenderer(window.WindowPtr, -1, SDL_RENDERER_ACCELERATED);
             ThrowIfFailed(RendererPtr);
+            SDL.SetHint(HintRenderScaleQuality, ((int)ScaleQuality.Nearest).ToString());
         }
 
         /// <summary>
@@ -37,6 +55,21 @@ namespace SDL2Net.Video
             }
             set => ThrowIfFailed(SDL.SetRenderDrawColor(RendererPtr, value.R, value.G, value.B, value.A));
         }
+
+        /// <summary>
+        ///     The scaling quality of this renderer. Null if not specified.
+        /// </summary>
+        public ScaleQuality ScaleQuality
+        {
+            get => _scaleQuality;
+            set
+            {
+                SDL.SetHint(HintRenderScaleQuality, value.ToString());
+                _scaleQuality = value;
+            }
+        }
+
+        private ScaleQuality _scaleQuality;
 
         /// <summary>
         ///     Clears the display area and fills with the color of <see cref="DrawColor" />.
@@ -82,8 +115,34 @@ namespace SDL2Net.Video
         /// <param name="points">Sequence points defining the positions of the individual lines</param>
         public void DrawLines(IEnumerable<Point> points)
         {
-            var sdlPoints = points.Select(p => new SDL_Point {x = p.X, y = p.Y}).ToArray();
+            var sdlPoints = points.Select(p => p.ToSdlPoint()).ToArray();
             ThrowIfFailed(SDL.RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length));
+        }
+
+        public void CopyTexture(Texture texture, Rectangle? dest = null, Rectangle? source = null)
+        {
+            var result = SDL.RenderCopy(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
+                GetRectOrDefault(texture, dest));
+            if (result != 0) throw new SDLException();
+        }
+
+        public void CopyTexture(Texture texture, Rectangle? dest, Rectangle? source, double angle, Point? origin,
+            RenderFlip flip)
+        {
+            var result = SDL.RenderCopyEx(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
+                GetRectOrDefault(texture, dest),
+                angle, GetPointOrDefault(texture, origin), flip);
+            if (result != 0) throw new SDLException();
+        }
+
+        private static SDL_Rect GetRectOrDefault(Texture texture, Rectangle? rectangle)
+        {
+            return rectangle?.ToSdlRect() ?? new SDL_Rect {x = 0, y = 0, w = texture.Width, h = texture.Height};
+        }
+
+        private static SDL_Point GetPointOrDefault(Texture texture, Point? point)
+        {
+            return point?.ToSdlPoint() ?? new SDL_Point {x = texture.Width / 2, y = texture.Height / 2};
         }
 
         #region IDisposable Support

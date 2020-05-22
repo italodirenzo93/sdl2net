@@ -1,0 +1,64 @@
+namespace SDL2Net.Video
+{
+    public enum PixelFormat : uint
+    {
+        Unknown,
+        Index1Lsb,
+        Index1msb,
+        Index4Lsb,
+        Index4Msb,
+        Index8,
+        Rgb332,
+        Rgb444,
+        Rgb555,
+        Bgr555,
+        Argb4444,
+        Rgba4444,
+        Abgr4444,
+        Bgra4444,
+        Argb1555,
+        Rgba5551,
+        Abgr1555,
+        Bgra5551,
+        Rgb565,
+        Bgr565,
+        Rgb24,
+        Bgr24,
+        Rgb888,
+        Rgbx8888,
+        Bgr888,
+        Bgrx8888,
+        Argb8888,
+        Rgba8888,
+        Abgr8888,
+        Bgra8888,
+        Argb2101010,
+        Rgba32,
+        Argb32,
+        Bgra32,
+        Abgr32,
+        Yv12,
+        Iyuv,
+        Yuy2,
+        Uyuy,
+        Yvyu,
+        Nv12,
+        Nv21
+    }
+
+    public enum PixelType
+    {
+        Unknown,
+        Index1,
+        Index4,
+        Index8,
+        Packed8,
+        Packed16,
+        Packed32,
+        ArrayU8,
+        ArrayU16,
+        ArrayU32,
+        ArrayF16,
+        ArrayF32
+    }
+}
