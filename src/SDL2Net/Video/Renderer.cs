@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using SDL2Net.Internal;
-using static SDL2Net.Internal.SDL_RendererFlags;
-using static SDL2Net.Utilities.Util;
+using SDL2Net.Utilities;
 
 namespace SDL2Net.Video
 {
+    [Flags]
+    public enum RendererFlags
+    {
+        Software = 1,
+        Accelerated = 2,
+        PresentVSync = 4,
+        TargetTexture = 8
+    }
+
     [Flags]
     public enum RenderFlip
     {
@@ -36,11 +45,11 @@ namespace SDL2Net.Video
         ///     Creates a new hardware-accelerated 2D renderer.
         /// </summary>
         /// <param name="window">The window to attach this rendering context to</param>
-        public Renderer(Window window)
+        /// <param name="flags">Additional flags describing the capabilities of the renderer</param>
+        public Renderer(Window window, RendererFlags flags = RendererFlags.Accelerated)
         {
-            RendererPtr = SDL.CreateRenderer(window.WindowPtr, -1, SDL_RENDERER_ACCELERATED);
-            ThrowIfFailed(RendererPtr);
-            //SDL.SetHint(HintRenderScaleQuality, ((int)ScaleQuality.Nearest).ToString());
+            RendererPtr = SDL.CreateRenderer(window.WindowPtr, -1, flags);
+            Util.ThrowIfFailed(RendererPtr);
         }
 
         /// <summary>
@@ -50,10 +59,15 @@ namespace SDL2Net.Video
         {
             get
             {
-                ThrowIfFailed(SDL.GetRenderDrawColor(RendererPtr, out var r, out var g, out var b, out var a));
+                var result = SDL.GetRenderDrawColor(RendererPtr, out var r, out var g, out var b, out var a);
+                Util.ThrowIfFailed(result);
                 return Color.FromArgb(a, r, g, b);
             }
-            set => ThrowIfFailed(SDL.SetRenderDrawColor(RendererPtr, value.R, value.G, value.B, value.A));
+            set
+            {
+                var result = SDL.SetRenderDrawColor(RendererPtr, value.R, value.G, value.B, value.A);
+                Util.ThrowIfFailed(result);
+            }
         }
 
         /// <summary>
@@ -61,22 +75,26 @@ namespace SDL2Net.Video
         /// </summary>
         public ScaleQuality ScaleQuality
         {
-            get => _scaleQuality;
+            get
+            {
+                var hint = Marshal.PtrToStringAnsi(SDL.GetHint(HintRenderScaleQuality));
+                if (hint == null) return ScaleQuality.Nearest;
+                return (ScaleQuality) int.Parse(hint);
+            }
             set
             {
-                SDL.SetHint(HintRenderScaleQuality, value.ToString());
-                _scaleQuality = value;
+                var result = SDL.SetHint(HintRenderScaleQuality, ((int)value).ToString());
+                if (!result) throw new SDLException();
             }
         }
-
-        private ScaleQuality _scaleQuality;
 
         /// <summary>
         ///     Clears the display area and fills with the color of <see cref="DrawColor" />.
         /// </summary>
         public void Clear()
         {
-            ThrowIfFailed(SDL.RenderClear(RendererPtr));
+            var result = SDL.RenderClear(RendererPtr);
+            Util.ThrowIfFailed(result);
         }
 
         /// <summary>
@@ -96,7 +114,8 @@ namespace SDL2Net.Video
         /// <param name="y2">Destination Y position</param>
         public void DrawLine(int x1, int y1, int x2, int y2)
         {
-            ThrowIfFailed(SDL.RenderDrawLine(RendererPtr, x1, y1, x2, y2));
+            var result = SDL.RenderDrawLine(RendererPtr, x1, y1, x2, y2);
+            Util.ThrowIfFailed(result);
         }
 
         /// <summary>
@@ -116,14 +135,15 @@ namespace SDL2Net.Video
         public void DrawLines(IEnumerable<Point> points)
         {
             var sdlPoints = points.Select(p => p.ToSdlPoint()).ToArray();
-            ThrowIfFailed(SDL.RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length));
+            var result = SDL.RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length);
+            Util.ThrowIfFailed(result);
         }
 
         public void CopyTexture(Texture texture, Rectangle? dest = null, Rectangle? source = null)
         {
             var result = SDL.RenderCopy(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
                 GetRectOrDefault(texture, dest));
-            if (result != 0) throw new SDLException();
+            Util.ThrowIfFailed(result);
         }
 
         public void CopyTexture(Texture texture, Rectangle? dest, Rectangle? source, double angle, Point? origin,
@@ -132,7 +152,7 @@ namespace SDL2Net.Video
             var result = SDL.RenderCopyEx(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
                 GetRectOrDefault(texture, dest),
                 angle, GetPointOrDefault(texture, origin), flip);
-            if (result != 0) throw new SDLException();
+            Util.ThrowIfFailed(result);
         }
 
         private static SDL_Rect GetRectOrDefault(Texture texture, Rectangle? rectangle)
@@ -151,13 +171,11 @@ namespace SDL2Net.Video
 
         protected virtual void Dispose(bool disposing)
         {
-            OutputDebugString("Disposing {0}: disposing = {1}", nameof(Renderer), disposing);
             if (_disposed) return;
-            if (disposing)
-            {
-            }
 
+            Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(Renderer), disposing);
             SDL.DestroyRenderer(RendererPtr);
+
             _disposed = true;
         }
 

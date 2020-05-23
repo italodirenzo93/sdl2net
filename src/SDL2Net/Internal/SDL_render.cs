@@ -5,33 +5,9 @@ using SDL2Net.Video;
 
 namespace SDL2Net.Internal
 {
-    [Flags]
-    internal enum SDL_RendererFlags : uint
-    {
-        SDL_RENDERER_SOFTWARE = 0x00000001,
-
-        /**
-         * < The renderer is a software fallback
-         */
-        SDL_RENDERER_ACCELERATED = 0x00000002,
-
-        /**
-         * < The renderer uses hardware
-         *     acceleration
-         */
-        SDL_RENDERER_PRESENTVSYNC = 0x00000004,
-
-        /**
-         * < Present is synchronized
-         *     with the refresh rate
-         */
-        SDL_RENDERER_TARGETTEXTURE = 0x00000008 /**< The renderer supports
-                                                     rendering to texture */
-    }
-
     internal static partial class SDL
     {
-        public delegate IntPtr SDL_CreateRenderer(IntPtr window, int index, SDL_RendererFlags flags);
+        public delegate IntPtr SDL_CreateRenderer(IntPtr window, int index, RendererFlags flags);
 
         public delegate void SDL_DestroyRenderer(IntPtr renderer);
 

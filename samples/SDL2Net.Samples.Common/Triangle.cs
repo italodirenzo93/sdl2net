@@ -10,7 +10,7 @@ namespace SDL2Net.Samples.Common
     public sealed class Triangle : IDisposable
     {
         private readonly InputSystem _inputSystem;
-        private GamePad? _gamePad;
+        private GamePad? _gamePad = null;
         private float _speed = 125f;
 
         public Triangle(InputSystem inputSystem)

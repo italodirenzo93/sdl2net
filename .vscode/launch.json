@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/SDL2Net.TestApp/bin/Debug/netcoreapp3.1/SDL2Net.TestApp.dll",
+            "program": "${workspaceFolder}/samples/SDL2Net.Samples.Composition/bin/Debug/netcoreapp3.1/SDL2Net.Samples.Composition.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SDL2Net.TestApp",
+            "cwd": "${workspaceFolder}/samples/SDL2Net.Samples.Composition",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

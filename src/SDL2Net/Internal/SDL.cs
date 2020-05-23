@@ -45,7 +45,7 @@ namespace SDL2Net.Internal
 
         public delegate IntPtr SDL_GetHint(string name);
 
-        public delegate int SDL_SetHint(string name, string value);
+        public delegate bool SDL_SetHint(string name, string value);
 
         public delegate IntPtr SDL_RWFromFile(string file, string mode);
 
