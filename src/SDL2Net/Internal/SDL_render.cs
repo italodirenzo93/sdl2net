@@ -28,6 +28,14 @@ namespace SDL2Net.Internal
 
         public delegate int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
 
+        public delegate IntPtr SDL_GetRenderTarget(IntPtr renderer);
+
+        public static readonly SDL_GetRenderTarget GetRenderTarget = SdlFunc<SDL_GetRenderTarget>();
+
+        public delegate int SDL_SetRenderTarget(IntPtr renderer, IntPtr texture);
+
+        public static readonly SDL_SetRenderTarget SetRenderTarget = SdlFunc<SDL_SetRenderTarget>();
+
         public const byte SDL_ALPHA_OPAQUE = 255;
         public const byte SDL_ALPHA_TRANSPARENT = 0;
 

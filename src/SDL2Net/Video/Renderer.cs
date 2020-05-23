@@ -89,6 +89,26 @@ namespace SDL2Net.Video
         }
 
         /// <summary>
+        /// The target surface for this renderer to draw to.
+        /// Passing <code>null</code> sets the target to the window this renderer
+        /// was createf for.
+        /// </summary>
+        public Texture? RenderTarget
+        {
+            get
+            {
+                var ptr = SDL.GetRenderTarget(RendererPtr);
+                return ptr == IntPtr.Zero ? null : new Texture(ptr);
+            }
+            set
+            {
+                // TODO: check if this renderer supports render targets
+                var result = SDL.SetRenderTarget(RendererPtr, value != null ? value.TexturePtr : IntPtr.Zero);
+                if (result == default) throw new SDLException();
+            }
+        }
+
+        /// <summary>
         ///     Clears the display area and fills with the color of <see cref="DrawColor" />.
         /// </summary>
         public void Clear()

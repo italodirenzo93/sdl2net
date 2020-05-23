@@ -73,5 +73,7 @@ namespace SDL2Net.Internal
             Platform.MacOS => Util.LoadLibrary("/usr/local/Cellar/sdl2/2.0.12_1/lib/libSDL2-2.0.0.dylib"),
             _ => throw new NotImplementedException("Haven't determined how to locate SDL on this platform")
         };
+
+        internal static TDelegate SdlFunc<TDelegate>() => Util.LoadFunction<TDelegate>(NativeLibrary, typeof(TDelegate).Name);
     }
 }

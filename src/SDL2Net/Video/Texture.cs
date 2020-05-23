@@ -18,6 +18,7 @@ namespace SDL2Net.Video
     public class Texture : IDisposable
     {
         internal readonly IntPtr TexturePtr;
+        internal readonly bool OwnsPtr = true;
 
         public Texture(Renderer renderer, PixelFormat format, TextureAccess access, int width, int height)
         {
@@ -29,6 +30,17 @@ namespace SDL2Net.Video
         {
             TexturePtr = SDL.CreateTextureFromSurface(renderer.RendererPtr, surface.SurfacePtr);
             Util.ThrowIfFailed(TexturePtr);
+        }
+
+        /// <summary>
+        /// Since there are some instances where SDL functions return a pointer to
+        /// an existing texture, we need an internal overload to create this class from one.
+        /// </summary>
+        /// <param name="ptr">Pointer to existing SDL_Texture</param>
+        internal Texture(IntPtr ptr)
+        {
+            TexturePtr = ptr;
+            OwnsPtr = false;
         }
 
         /// <summary>
@@ -115,7 +127,7 @@ namespace SDL2Net.Video
 
             Util.OutputDebugString($"Disposing Texture: disposing = {disposing}");
 
-            SDL.DestroyTexture(TexturePtr);
+            if (OwnsPtr) SDL.DestroyTexture(TexturePtr);
 
             _disposed = true;
         }
