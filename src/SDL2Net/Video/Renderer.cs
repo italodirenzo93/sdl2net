@@ -33,7 +33,7 @@ namespace SDL2Net.Video
     }
 
     /// <summary>
-    ///     SDL Renderer object. https://wiki.libsdl.org/CategoryRender
+    ///     SDL Renderer object. https://wiki.libSDL.Impl.Getorg/CategoryRender
     /// </summary>
     public class Renderer : IDisposable
     {
@@ -48,7 +48,7 @@ namespace SDL2Net.Video
         /// <param name="flags">Additional flags describing the capabilities of the renderer</param>
         public Renderer(Window window, RendererFlags flags = RendererFlags.Accelerated)
         {
-            RendererPtr = SDL.CreateRenderer(window.WindowPtr, -1, flags);
+            RendererPtr = SDL.Impl.GetFunction<SDL_CreateRenderer>()(window.WindowPtr, -1, flags);
             Util.ThrowIfFailed(RendererPtr);
         }
 
@@ -59,13 +59,13 @@ namespace SDL2Net.Video
         {
             get
             {
-                var result = SDL.GetRenderDrawColor(RendererPtr, out var r, out var g, out var b, out var a);
+                var result = SDL.Impl.GetFunction<SDL_GetRenderDrawColor>()(RendererPtr, out var r, out var g, out var b, out var a);
                 if (result != default) throw new SDLException();
                 return Color.FromArgb(a, r, g, b);
             }
             set
             {
-                var result = SDL.SetRenderDrawColor(RendererPtr, value.R, value.G, value.B, value.A);
+                var result = SDL.Impl.GetFunction<SDL_SetRenderDrawColor>()(RendererPtr, value.R, value.G, value.B, value.A);
                 if (result != default) throw new SDLException();
             }
         }
@@ -97,13 +97,13 @@ namespace SDL2Net.Video
         {
             get
             {
-                var ptr = SDL.GetRenderTarget(RendererPtr);
+                var ptr = SDL.Impl.GetFunction<SDL_GetRenderTarget>()(RendererPtr);
                 return ptr == IntPtr.Zero ? null : new Texture(ptr);
             }
             set
             {
                 // TODO: check if this renderer supports render targets
-                var result = SDL.SetRenderTarget(RendererPtr, value != null ? value.TexturePtr : IntPtr.Zero);
+                var result = SDL.Impl.GetFunction<SDL_SetRenderTarget>()(RendererPtr, value != null ? value.TexturePtr : IntPtr.Zero);
                 if (result == default) throw new SDLException();
             }
         }
@@ -113,7 +113,7 @@ namespace SDL2Net.Video
         /// </summary>
         public Renderer Clear()
         {
-            var result = SDL.RenderClear(RendererPtr);
+            var result = SDL.Impl.GetFunction<SDL_RenderClear>()(RendererPtr);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -123,7 +123,7 @@ namespace SDL2Net.Video
         /// </summary>
         public void Present()
         {
-            SDL.RenderPresent(RendererPtr);
+            SDL.Impl.GetFunction<SDL_RenderPresent>()(RendererPtr);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace SDL2Net.Video
         /// <param name="y2">Destination Y position</param>
         public Renderer DrawLine(int x1, int y1, int x2, int y2)
         {
-            var result = SDL.RenderDrawLine(RendererPtr, x1, y1, x2, y2);
+            var result = SDL.Impl.GetFunction<SDL_RenderDrawLine>()(RendererPtr, x1, y1, x2, y2);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -154,14 +154,14 @@ namespace SDL2Net.Video
         public Renderer DrawLines(IEnumerable<Point> points)
         {
             var sdlPoints = points.Select(p => p.ToSdlPoint()).ToArray();
-            var result = SDL.RenderDrawLines(RendererPtr, sdlPoints, sdlPoints.Length);
+            var result = SDL.Impl.GetFunction<SDL_RenderDrawLines>()(RendererPtr, sdlPoints, sdlPoints.Length);
             if (result != default) throw new SDLException();
             return this;
         }
 
         public Renderer DrawPoint(int x, int y)
         {
-            var result = SDL.RenderDrawPoint(RendererPtr, x, y);
+            var result = SDL.Impl.GetFunction<SDL_RenderDrawPoint>()(RendererPtr, x, y);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -171,7 +171,7 @@ namespace SDL2Net.Video
         public Renderer DrawPoints(IEnumerable<Point> points)
         {
             var sdlPoints = points.Select(p => p.ToSdlPoint()).ToArray();
-            var result = SDL.RenderDrawPoints(RendererPtr, sdlPoints, sdlPoints.Length);
+            var result = SDL.Impl.GetFunction<SDL_RenderDrawPoints>()(RendererPtr, sdlPoints, sdlPoints.Length);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -181,7 +181,7 @@ namespace SDL2Net.Video
         public Renderer DrawRect(Rectangle rect)
         {
             var sdlRect = rect.ToSdlRect();
-            var result = SDL.RenderDrawRect(RendererPtr, ref sdlRect);
+            var result = SDL.Impl.GetFunction<SDL_RenderDrawRect>()(RendererPtr, ref sdlRect);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -189,7 +189,7 @@ namespace SDL2Net.Video
         public Renderer DrawRects(IEnumerable<Rectangle> rectangles)
         {
             var sdlRects = rectangles.Select(r => r.ToSdlRect()).ToArray();
-            var result = SDL.RenderDrawRects(RendererPtr, sdlRects, sdlRects.Length);
+            var result = SDL.Impl.GetFunction<SDL_RenderDrawRects>()(RendererPtr, sdlRects, sdlRects.Length);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -199,7 +199,7 @@ namespace SDL2Net.Video
         public Renderer FillRect(Rectangle rect)
         {
             var sdlRect = rect.ToSdlRect();
-            var result = SDL.RenderFillRect(RendererPtr, ref sdlRect);
+            var result = SDL.Impl.GetFunction<SDL_RenderFillRect>()(RendererPtr, ref sdlRect);
             if (result != default) throw new SDLException();
             return this;
         }
@@ -207,14 +207,14 @@ namespace SDL2Net.Video
         public Renderer FillRects(IEnumerable<Rectangle> rectangles)
         {
             var sdlRects = rectangles.Select(r => r.ToSdlRect()).ToArray();
-            var result = SDL.RenderFillRects(RendererPtr, sdlRects, sdlRects.Length);
+            var result = SDL.Impl.GetFunction<SDL_RenderFillRects>()(RendererPtr, sdlRects, sdlRects.Length);
             if (result != default) throw new SDLException();
             return this;
         }
 
         public Renderer CopyTexture(Texture texture, Rectangle? dest = null, Rectangle? source = null)
         {
-            var result = SDL.RenderCopy(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
+            var result = SDL.Impl.GetFunction<SDL_RenderCopy>()(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
                 GetRectOrDefault(texture, dest));
             if (result != default) throw new SDLException();
             return this;
@@ -223,7 +223,7 @@ namespace SDL2Net.Video
         public Renderer CopyTexture(Texture texture, Rectangle? dest, Rectangle? source, double angle, Point? origin,
             RenderFlip flip)
         {
-            var result = SDL.RenderCopyEx(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
+            var result = SDL.Impl.GetFunction<SDL_RenderCopyEx>()(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
                 GetRectOrDefault(texture, dest),
                 angle, GetPointOrDefault(texture, origin), flip);
             if (result != default) throw new SDLException();
@@ -255,7 +255,7 @@ namespace SDL2Net.Video
             if (_disposed) return;
 
             Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(Renderer), disposing);
-            SDL.DestroyRenderer(RendererPtr);
+            SDL.Impl.GetFunction<SDL_DestroyRenderer>()(RendererPtr);
 
             _disposed = true;
         }

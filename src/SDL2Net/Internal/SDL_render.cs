@@ -1,102 +1,68 @@
 using System;
 using System.Runtime.InteropServices;
-using SDL2Net.Utilities;
 using SDL2Net.Video;
 
 namespace SDL2Net.Internal
 {
+    internal delegate IntPtr SDL_GetRenderTarget(IntPtr renderer);
+    internal delegate int SDL_SetRenderTarget(IntPtr renderer, IntPtr texture);
+
+    internal delegate int SDL_GetRenderDrawColor(IntPtr renderer, out byte r, out byte g, out byte b, out byte a);
+    internal delegate int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
+
+    internal delegate IntPtr SDL_CreateRenderer(IntPtr window, int index, RendererFlags flags);
+    internal delegate void SDL_DestroyRenderer(IntPtr renderer);
+
+    internal delegate int SDL_RenderClear(IntPtr renderer);
+
+    internal delegate int SDL_RenderCopy(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest);
+
+    internal delegate int SDL_RenderCopyEx(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest,
+        double angle, [In] SDL_Point center, RenderFlip flip);
+
+    internal delegate int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
+    internal delegate int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
+
+    internal delegate int SDL_RenderDrawPoint(IntPtr render, int x, int y);
+    internal delegate int SDL_RenderDrawPoints(IntPtr renderer, [In] SDL_Point[] points, int count);
+
+    internal delegate int SDL_RenderDrawRect(IntPtr render, ref SDL_Rect rect);
+    internal delegate int SDL_RenderDrawRects(IntPtr render, [In] SDL_Rect[] rect, int count);
+
+    internal delegate int SDL_RenderFillRect(IntPtr render, ref SDL_Rect rect);
+    internal delegate int SDL_RenderFillRects(IntPtr render, [In] SDL_Rect[] rect, int count);
+
+    internal delegate void SDL_RenderPresent(IntPtr renderer);
+
+    internal interface INativeClient
+    {
+        TDelegate GetFunction<TDelegate>();
+        TDelegate GetFunction<TDelegate>(string name);
+    }
+
+    internal sealed class SDLImpl : INativeClient
+    {
+        public TDelegate GetFunction<TDelegate>() => GetFunction<TDelegate>(typeof(TDelegate).Name);
+        public TDelegate GetFunction<TDelegate>(string name) => Utilities.Util.LoadFunction<TDelegate>(SDL.NativeLibrary, name);
+    }
+
     internal static partial class SDL
     {
-        public delegate IntPtr SDL_CreateRenderer(IntPtr window, int index, RendererFlags flags);
-
-        public delegate void SDL_DestroyRenderer(IntPtr renderer);
-
-        public delegate int SDL_GetRenderDrawColor(IntPtr renderer, out byte r, out byte g, out byte b, out byte a);
-
-        public delegate int SDL_RenderClear(IntPtr renderer);
-
-        public delegate int SDL_RenderCopy(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest);
-
-        public delegate int SDL_RenderCopyEx(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest,
-            double angle, [In] SDL_Point center, RenderFlip flip);
-
-        public delegate int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
-
-        public delegate int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
-
-        public delegate int SDL_RenderDrawPoint(IntPtr render, int x, int y);
-
-        public delegate int SDL_RenderDrawPoints(IntPtr renderer, [In] SDL_Point[] points, int count);
-
-        public delegate int SDL_RenderDrawRect(IntPtr render, ref SDL_Rect rect);
-
-        public delegate int SDL_RenderDrawRects(IntPtr render, [In] SDL_Rect[] rect, int count);
-
-        public delegate int SDL_RenderFillRect(IntPtr render, ref SDL_Rect rect);
-
-        public delegate int SDL_RenderFillRects(IntPtr render, [In] SDL_Rect[] rect, int count);
-
-        public delegate void SDL_RenderPresent(IntPtr renderer);
-
-        public delegate int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
-
-        public delegate IntPtr SDL_GetRenderTarget(IntPtr renderer);
-
-        public static readonly SDL_GetRenderTarget GetRenderTarget = SdlFunc<SDL_GetRenderTarget>();
-
-        public delegate int SDL_SetRenderTarget(IntPtr renderer, IntPtr texture);
-
-        public static readonly SDL_SetRenderTarget SetRenderTarget = SdlFunc<SDL_SetRenderTarget>();
+        private static INativeClient? _impl = null;
+        public static INativeClient Impl
+        {
+            get
+            {
+                if (_impl == null) _impl = new SDLImpl();
+                return _impl;
+            }
+            set
+            {
+                _impl = value;
+            }
+        }
 
         public const byte SDL_ALPHA_OPAQUE = 255;
         public const byte SDL_ALPHA_TRANSPARENT = 0;
-
-        public static readonly SDL_CreateRenderer CreateRenderer =
-            Util.LoadFunction<SDL_CreateRenderer>(NativeLibrary, nameof(SDL_CreateRenderer));
-
-        public static readonly SDL_DestroyRenderer DestroyRenderer =
-            Util.LoadFunction<SDL_DestroyRenderer>(NativeLibrary, nameof(SDL_DestroyRenderer));
-
-        public static readonly SDL_RenderClear RenderClear =
-            Util.LoadFunction<SDL_RenderClear>(NativeLibrary, nameof(SDL_RenderClear));
-
-        public static readonly SDL_RenderPresent RenderPresent =
-            Util.LoadFunction<SDL_RenderPresent>(NativeLibrary, nameof(SDL_RenderPresent));
-
-        public static readonly SDL_GetRenderDrawColor GetRenderDrawColor =
-            Util.LoadFunction<SDL_GetRenderDrawColor>(NativeLibrary, nameof(SDL_GetRenderDrawColor));
-
-        public static readonly SDL_SetRenderDrawColor SetRenderDrawColor =
-            Util.LoadFunction<SDL_SetRenderDrawColor>(NativeLibrary, nameof(SDL_SetRenderDrawColor));
-
-        public static readonly SDL_RenderDrawLine RenderDrawLine =
-            Util.LoadFunction<SDL_RenderDrawLine>(NativeLibrary, nameof(SDL_RenderDrawLine));
-
-        public static readonly SDL_RenderDrawLines RenderDrawLines =
-            Util.LoadFunction<SDL_RenderDrawLines>(NativeLibrary, nameof(SDL_RenderDrawLines));
-
-        public static readonly SDL_RenderDrawPoint RenderDrawPoint =
-            Util.LoadFunction<SDL_RenderDrawPoint>(NativeLibrary, nameof(SDL_RenderDrawPoint));
-
-        public static readonly SDL_RenderDrawPoints RenderDrawPoints =
-            Util.LoadFunction<SDL_RenderDrawPoints>(NativeLibrary, nameof(SDL_RenderDrawPoints));
-
-        public static readonly SDL_RenderDrawRect RenderDrawRect =
-            Util.LoadFunction<SDL_RenderDrawRect>(NativeLibrary, nameof(SDL_RenderDrawRect));
-
-        public static readonly SDL_RenderDrawRects RenderDrawRects =
-            Util.LoadFunction<SDL_RenderDrawRects>(NativeLibrary, nameof(SDL_RenderDrawRects));
-
-        public static readonly SDL_RenderFillRect RenderFillRect =
-            Util.LoadFunction<SDL_RenderFillRect>(NativeLibrary, nameof(SDL_RenderFillRect));
-
-        public static readonly SDL_RenderFillRects RenderFillRects =
-            Util.LoadFunction<SDL_RenderFillRects>(NativeLibrary, nameof(SDL_RenderFillRects));
-
-        public static readonly SDL_RenderCopy RenderCopy =
-            Util.LoadFunction<SDL_RenderCopy>(NativeLibrary, nameof(SDL_RenderCopy));
-
-        public static readonly SDL_RenderCopyEx RenderCopyEx =
-            Util.LoadFunction<SDL_RenderCopyEx>(NativeLibrary, nameof(SDL_RenderCopyEx));
     }
 }

@@ -74,6 +74,6 @@ namespace SDL2Net.Internal
             _ => throw new NotImplementedException("Haven't determined how to locate SDL on this platform")
         };
 
-        internal static TDelegate SdlFunc<TDelegate>() => Util.LoadFunction<TDelegate>(NativeLibrary, typeof(TDelegate).Name);
+        internal static TDelegate Function<TDelegate>() => Util.LoadFunction<TDelegate>(NativeLibrary, typeof(TDelegate).Name);
     }
 }
