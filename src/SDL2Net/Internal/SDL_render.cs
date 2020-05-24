@@ -24,6 +24,18 @@ namespace SDL2Net.Internal
 
         public delegate int SDL_RenderDrawLines(IntPtr renderer, [In] SDL_Point[] points, int count);
 
+        public delegate int SDL_RenderDrawPoint(IntPtr render, int x, int y);
+
+        public delegate int SDL_RenderDrawPoints(IntPtr renderer, [In] SDL_Point[] points, int count);
+
+        public delegate int SDL_RenderDrawRect(IntPtr render, ref SDL_Rect rect);
+
+        public delegate int SDL_RenderDrawRects(IntPtr render, [In] SDL_Rect[] rect, int count);
+
+        public delegate int SDL_RenderFillRect(IntPtr render, ref SDL_Rect rect);
+
+        public delegate int SDL_RenderFillRects(IntPtr render, [In] SDL_Rect[] rect, int count);
+
         public delegate void SDL_RenderPresent(IntPtr renderer);
 
         public delegate int SDL_SetRenderDrawColor(IntPtr renderer, byte r, byte g, byte b, byte a);
@@ -62,6 +74,24 @@ namespace SDL2Net.Internal
 
         public static readonly SDL_RenderDrawLines RenderDrawLines =
             Util.LoadFunction<SDL_RenderDrawLines>(NativeLibrary, nameof(SDL_RenderDrawLines));
+
+        public static readonly SDL_RenderDrawPoint RenderDrawPoint =
+            Util.LoadFunction<SDL_RenderDrawPoint>(NativeLibrary, nameof(SDL_RenderDrawPoint));
+
+        public static readonly SDL_RenderDrawPoints RenderDrawPoints =
+            Util.LoadFunction<SDL_RenderDrawPoints>(NativeLibrary, nameof(SDL_RenderDrawPoints));
+
+        public static readonly SDL_RenderDrawRect RenderDrawRect =
+            Util.LoadFunction<SDL_RenderDrawRect>(NativeLibrary, nameof(SDL_RenderDrawRect));
+
+        public static readonly SDL_RenderDrawRects RenderDrawRects =
+            Util.LoadFunction<SDL_RenderDrawRects>(NativeLibrary, nameof(SDL_RenderDrawRects));
+
+        public static readonly SDL_RenderFillRect RenderFillRect =
+            Util.LoadFunction<SDL_RenderFillRect>(NativeLibrary, nameof(SDL_RenderFillRect));
+
+        public static readonly SDL_RenderFillRects RenderFillRects =
+            Util.LoadFunction<SDL_RenderFillRects>(NativeLibrary, nameof(SDL_RenderFillRects));
 
         public static readonly SDL_RenderCopy RenderCopy =
             Util.LoadFunction<SDL_RenderCopy>(NativeLibrary, nameof(SDL_RenderCopy));

@@ -57,15 +57,25 @@ namespace SDL2Net.Samples.Composition
                 triangle.Update(deltaSeconds);
 
                 // Draw stuff
-                renderer.DrawColor = Color.Black;
-                renderer.Clear();
+                renderer.SetDrawColor(Color.Black).Clear();
 
                 if (texture != null)
                     renderer.CopyTexture(texture);
                 else
                     triangle.Draw(renderer);
 
-                renderer.Present();
+                renderer
+                    .SetDrawColor(Color.CornflowerBlue)
+                    .DrawPoints(new Point[]
+                    {
+                        new Point(255, 255),
+                        new Point(456, 654),
+                        new Point(89, 123),
+                        new Point(286, 523),
+                    })
+                    .SetDrawColor(Color.Teal)
+                    .FillRect(450, 240, 125, 35)
+                    .Present();
             };
 
             // Do some kind of cleanup at app exit like stopping playing music
