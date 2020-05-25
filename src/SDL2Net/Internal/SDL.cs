@@ -1,10 +1,13 @@
 using System;
+using System.Runtime.CompilerServices;
 using SDL2Net.Utilities;
+
+[assembly: InternalsVisibleTo("SDL2Net.Tests")]
 
 namespace SDL2Net.Internal
 {
     [Flags]
-    internal enum SDL_InitFlags : uint
+    public enum SDL_InitFlags : uint
     {
         SDL_INIT_TIMER = 0x00000001u,
         SDL_INIT_AUDIO = 0x00000010u,
@@ -31,8 +34,27 @@ namespace SDL2Net.Internal
                               SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS | SDL_INIT_SENSOR
     }
 
+    public delegate int SDL_InitSubSystem(SDL_InitFlags flags);
+
+    public delegate void SDL_QuitSubSystem(SDL_InitFlags flags);
+
     internal static partial class SDL
     {
+        private static INativeLibrary? _impl = null;
+
+        public static INativeLibrary Impl
+        {
+            get
+            {
+                if (_impl == null) _impl = new SDLImpl();
+                return _impl;
+            }
+            set
+            {
+                _impl = value;
+            }
+        }
+
         public delegate int SDL_Init(SDL_InitFlags flags);
 
         public delegate int SDL_InitSubSystem(SDL_InitFlags flags);
@@ -40,8 +62,6 @@ namespace SDL2Net.Internal
         public delegate void SDL_Quit();
 
         public delegate void SDL_QuitSubSystem(SDL_InitFlags flags);
-
-        public delegate SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
 
         public delegate IntPtr SDL_GetHint(string name);
 
@@ -59,8 +79,6 @@ namespace SDL2Net.Internal
         public static readonly SDL_QuitSubSystem QuitSubSystem =
             Util.LoadFunction<SDL_QuitSubSystem>(NativeLibrary, nameof(SDL_QuitSubSystem));
 
-        public static readonly SDL_WasInit WasInit = Util.LoadFunction<SDL_WasInit>(NativeLibrary, nameof(SDL_WasInit));
-
         public static readonly SDL_GetHint GetHint = Util.LoadFunction<SDL_GetHint>(NativeLibrary, nameof(SDL_GetHint));
 
         public static readonly SDL_SetHint SetHint = Util.LoadFunction<SDL_SetHint>(NativeLibrary, nameof(SDL_SetHint));
@@ -73,7 +91,14 @@ namespace SDL2Net.Internal
             Platform.MacOS => Util.LoadLibrary("/usr/local/Cellar/sdl2/2.0.12_1/lib/libSDL2-2.0.0.dylib"),
             _ => throw new NotImplementedException("Haven't determined how to locate SDL on this platform")
         };
+    }
 
-        internal static TDelegate Function<TDelegate>() => Util.LoadFunction<TDelegate>(NativeLibrary, typeof(TDelegate).Name);
+    internal sealed class SDLImpl : INativeLibrary
+    {
+        internal IntPtr LibraryPtr { get; } = SDL.NativeLibrary;
+
+        public TDelegate GetFunction<TDelegate>() => GetFunction<TDelegate>(typeof(TDelegate).Name);
+
+        public TDelegate GetFunction<TDelegate>(string name) => Utilities.Util.LoadFunction<TDelegate>(LibraryPtr, name);
     }
 }

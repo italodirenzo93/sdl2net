@@ -3,28 +3,28 @@
 namespace SDL2Net.Internal
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDL_Point
+    public struct SDL_Point
     {
         public int x;
         public int y;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDL_FPoint
+    public struct SDL_FPoint
     {
         public float x;
         public float y;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDL_Rect
+    public struct SDL_Rect
     {
         public int x, y;
         public int w, h;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDL_FRect
+    public struct SDL_FRect
     {
         public float x;
         public float y;

@@ -8,7 +8,7 @@ using static SDL2Net.Utilities.Util;
 namespace SDL2Net.Video
 {
     /// <summary>
-    ///     SDL Window object. https://wiki.libsdl.org/CategoryVideo
+    ///     SDL Window object. https://wiki.libSDL.Impl.GetFunction<org/CategoryVideo
     /// </summary>
     public class Window : IDisposable
     {
@@ -16,9 +16,11 @@ namespace SDL2Net.Video
 
         public Window(string title, int x, int y, int w, int h)
         {
-            ThrowIfFailed(SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO));
-            WindowPtr = SDL.CreateWindow(title, x, y, w, h, 0);
-            ThrowIfFailed(WindowPtr);
+            var result = SDL.Impl.GetFunction<SDL_InitSubSystem>()(SDL_InitFlags.SDL_INIT_VIDEO);
+            if (result != default) throw new SDLException();
+
+            WindowPtr = SDL.Impl.GetFunction<SDL_CreateWindow>()(title, x, y, w, h, 0);
+            if (WindowPtr == default) throw new SDLException();
         }
 
         /// <summary>
@@ -26,8 +28,8 @@ namespace SDL2Net.Video
         /// </summary>
         public string Title
         {
-            get => Marshal.PtrToStringAnsi(SDL.GetWindowTitle(WindowPtr));
-            set => SDL.SetWindowTitle(WindowPtr, value);
+            get => Marshal.PtrToStringAnsi(SDL.Impl.GetFunction<SDL_GetWindowTitle>()(WindowPtr));
+            set => SDL.Impl.GetFunction<SDL_SetWindowTitle>()(WindowPtr, value);
         }
 
         /// <summary>
@@ -37,10 +39,10 @@ namespace SDL2Net.Video
         {
             get
             {
-                SDL.GetWindowPosition(WindowPtr, out var x, out var y);
+                SDL.Impl.GetFunction<SDL_GetWindowPosition>()(WindowPtr, out var x, out var y);
                 return new Point(x, y);
             }
-            set => SDL.SetWindowPosition(WindowPtr, value.X, value.Y);
+            set => SDL.Impl.GetFunction<SDL_SetWindowPosition>()(WindowPtr, value.X, value.Y);
         }
 
         /// <summary>
@@ -50,10 +52,10 @@ namespace SDL2Net.Video
         {
             get
             {
-                SDL.GetWindowSize(WindowPtr, out var w, out var h);
+                SDL.Impl.GetFunction<SDL_GetWindowSize>()(WindowPtr, out var w, out var h);
                 return new Size(w, h);
             }
-            set => SDL.SetWindowSize(WindowPtr, value.Width, value.Height);
+            set => SDL.Impl.GetFunction<SDL_SetWindowSize>()(WindowPtr, value.Width, value.Height);
         }
 
         /// <summary>
@@ -61,8 +63,8 @@ namespace SDL2Net.Video
         /// </summary>
         public bool Resizable
         {
-            get => SDL.GetWindowFlags(WindowPtr).HasFlag(SDL_WINDOW_RESIZABLE);
-            set => SDL.SetWindowResizable(WindowPtr, Convert.ToInt32(value));
+            get => SDL.Impl.GetFunction<SDL_GetWindowFlags>()(WindowPtr).HasFlag(SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            set => SDL.Impl.GetFunction<SDL_SetWindowResizable>()(WindowPtr, Convert.ToInt32(value));
         }
 
         /// <summary>
@@ -70,13 +72,13 @@ namespace SDL2Net.Video
         /// </summary>
         public bool IsVisible
         {
-            get => SDL.GetWindowFlags(WindowPtr).HasFlag(SDL_WINDOW_SHOWN);
+            get => SDL.Impl.GetFunction<SDL_GetWindowFlags>()(WindowPtr).HasFlag(SDL_WindowFlags.SDL_WINDOW_SHOWN);
             set
             {
                 if (value)
-                    SDL.ShowWindow(WindowPtr);
+                    SDL.Impl.GetFunction<SDL_ShowWindow>()(WindowPtr);
                 else
-                    SDL.HideWindow(WindowPtr);
+                    SDL.Impl.GetFunction<SDL_HideWindow>()(WindowPtr);
             }
         }
 
@@ -90,8 +92,8 @@ namespace SDL2Net.Video
 
             if (_disposed) return;
 
-            SDL.DestroyWindow(WindowPtr);
-            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
+            SDL.Impl.GetFunction<SDL_DestroyWindow>()(WindowPtr);
+            SDL.Impl.GetFunction<SDL_QuitSubSystem>()(SDL_InitFlags.SDL_INIT_VIDEO);
 
             _disposed = true;
         }

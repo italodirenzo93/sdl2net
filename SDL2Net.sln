@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net.Samples.Composition
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SDL2Net.Samples.FSharp", "samples\SDL2Net.Samples.FSharp\SDL2Net.Samples.FSharp.fsproj", "{D6B18ED9-27B0-45B1-ABEE-85FC4B4A1B59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2Net.Tests", "tests\SDL2Net.Tests\SDL2Net.Tests.csproj", "{B8D4ACAE-662A-4D2A-9A76-05ACDF58B00E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{D6B18ED9-27B0-45B1-ABEE-85FC4B4A1B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6B18ED9-27B0-45B1-ABEE-85FC4B4A1B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6B18ED9-27B0-45B1-ABEE-85FC4B4A1B59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8D4ACAE-662A-4D2A-9A76-05ACDF58B00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D4ACAE-662A-4D2A-9A76-05ACDF58B00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D4ACAE-662A-4D2A-9A76-05ACDF58B00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D4ACAE-662A-4D2A-9A76-05ACDF58B00E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
