@@ -22,7 +22,16 @@ namespace SDL2Net.Tests
             Renderer? renderer = null;
             try
             {
-                var impl = new Mock<INativeLibrary>();
+                var impl = new Mock<INativeLibrary>(){DefaultValue = DefaultValue.Mock};
+                
+                impl.Setup(x => x.GetFunction<SDL_InitSubSystem>()).Returns(() =>
+                {
+                    return flags => It.Is<int>(i => i != 0);
+                });
+                impl.Setup(x => x.GetFunction<SDL_CreateWindow>()).Returns(() =>
+                {
+                    return (title, x, y, w, h, flags) => new IntPtr(It.IsAny<int>());
+                });
 
                 var createFn = new Mock<SDL_CreateRenderer>();
                 impl.Setup(x => x.GetFunction<SDL_CreateRenderer>())
@@ -31,8 +40,6 @@ namespace SDL2Net.Tests
                 var destroyFn = new Mock<SDL_DestroyRenderer>();
                 impl.Setup(x => x.GetFunction<SDL_DestroyRenderer>())
                     .Returns(() => destroyFn.Object);
-
-                impl.Setup(x => x.GetFunction<It.IsAnyType>()).Returns(() => new Mock<It.IsAnyType>().Object);
 
                 SDL.Impl = impl.Object;
                 using var window = new Window(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(),

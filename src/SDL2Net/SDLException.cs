@@ -12,6 +12,6 @@ namespace SDL2Net
         /// <summary>
         ///     An error string from <code>SDL_GetError()</code>.
         /// </summary>
-        public override string Message => Marshal.PtrToStringAnsi(SDL.GetError());
+        public override string Message => Marshal.PtrToStringAnsi(SDL.Impl.GetFunction<SDL_GetError>()());
     }
 }

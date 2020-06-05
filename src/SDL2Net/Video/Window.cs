@@ -17,10 +17,10 @@ namespace SDL2Net.Video
         public Window(string title, int x, int y, int w, int h)
         {
             var result = SDL.Impl.GetFunction<SDL_InitSubSystem>()(SDL_InitFlags.SDL_INIT_VIDEO);
-            if (result != default) throw new SDLException();
+            if (result != 0) throw new SDLException();
 
             WindowPtr = SDL.Impl.GetFunction<SDL_CreateWindow>()(title, x, y, w, h, 0);
-            if (WindowPtr == default) throw new SDLException();
+            if (WindowPtr == IntPtr.Zero) throw new SDLException();
         }
 
         /// <summary>

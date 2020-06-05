@@ -37,6 +37,8 @@ namespace SDL2Net.Internal
     public delegate int SDL_InitSubSystem(SDL_InitFlags flags);
 
     public delegate void SDL_QuitSubSystem(SDL_InitFlags flags);
+    
+    public delegate IntPtr SDL_GetError();
 
     internal static partial class SDL
     {
