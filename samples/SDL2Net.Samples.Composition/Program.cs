@@ -28,21 +28,23 @@ namespace SDL2Net.Samples.Composition
 
             // Put something on the screen
             using var triangle = new Triangle(400, 300, inputSystem);
+            using var surface = new Surface("LAND2.bmp");
+            Console.WriteLine($"Surface width: {surface.Width}");
+            Console.WriteLine($"Surface height: {surface.Height}");
+            using var texture = new Texture(renderer, surface);
+
+            var showTexture = true;
 
             // Perform initialization logic like loading assets
             inputSystem.Keyboard
                 .Where(e => e.Key == Key.Escape && e.ButtonState == ButtonState.Pressed)
                 .Subscribe(e => app.Quit());
 
-            // Load bitmap image from argv
-            Texture? texture = null;
-            if (args.Length > 0)
-            {
-                using var surface = new Surface(args[0]);
-                Console.WriteLine($"Surface width: {surface.Width}");
-                Console.WriteLine($"Surface height: {surface.Height}");
-                texture = new Texture(renderer, surface);
-            }
+            inputSystem.Keyboard
+                .Where(e => e.Key == Key.Z)
+                .Where(e => !e.IsRepeat)
+                .Where(e => e.ButtonState == ButtonState.Pressed)
+                .Subscribe(e => showTexture = !showTexture);
 
             // Define update function
             var lastTime = app.Elapsed;
@@ -60,7 +62,7 @@ namespace SDL2Net.Samples.Composition
                 renderer.DrawColor = Color.Black;
                 renderer.Clear();
 
-                if (texture != null)
+                if (showTexture)
                     renderer.CopyTexture(texture);
                 else
                     triangle.Draw(renderer);
@@ -71,7 +73,6 @@ namespace SDL2Net.Samples.Composition
             // Do some kind of cleanup at app exit like stopping playing music
             app.OnExit = () =>
             {
-                texture?.Dispose();
                 Console.WriteLine("exiting composed app...");
             };
 

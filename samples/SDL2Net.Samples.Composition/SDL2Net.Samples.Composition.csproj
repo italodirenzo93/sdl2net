@@ -7,8 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\SDL2Net\SDL2Net.csproj"/>
-        <ProjectReference Include="..\SDL2Net.Samples.Common\SDL2Net.Samples.Common.csproj"/>
+        <ProjectReference Include="..\..\src\SDL2Net\SDL2Net.csproj" />
+        <ProjectReference Include="..\SDL2Net.Samples.Common\SDL2Net.Samples.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="LAND2.bmp">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
