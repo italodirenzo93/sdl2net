@@ -28,7 +28,7 @@ namespace SDL2Net.Samples.Composition
 
             // Put something on the screen
             using var triangle = new Triangle(400, 300, inputSystem);
-            using var surface = new Surface("LAND2.bmp");
+            using var surface = Surface.CreateFromBitmapFile("LAND2.bmp");
             Console.WriteLine($"Surface width: {surface.Width}");
             Console.WriteLine($"Surface height: {surface.Height}");
             using var texture = new Texture(renderer, surface);
@@ -55,7 +55,7 @@ namespace SDL2Net.Samples.Composition
                 lastTime = elapsed;
 
                 // Convert milliseconds to seconds
-                var deltaSeconds = (float)deltaTime / 1000;
+                var deltaSeconds = (float) deltaTime / 1000;
                 triangle.Update(deltaSeconds);
 
                 // Draw stuff
@@ -71,10 +71,7 @@ namespace SDL2Net.Samples.Composition
             };
 
             // Do some kind of cleanup at app exit like stopping playing music
-            app.OnExit = () =>
-            {
-                Console.WriteLine("exiting composed app...");
-            };
+            app.OnExit = () => { Console.WriteLine("exiting composed app..."); };
 
             // Knock down the dominoes
             app.Run();

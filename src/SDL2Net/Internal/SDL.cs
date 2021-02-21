@@ -33,6 +33,8 @@ namespace SDL2Net.Internal
 
     internal static partial class SDL
     {
+        public delegate IntPtr SDL_GetHint(string name);
+
         public delegate int SDL_Init(SDL_InitFlags flags);
 
         public delegate int SDL_InitSubSystem(SDL_InitFlags flags);
@@ -41,13 +43,11 @@ namespace SDL2Net.Internal
 
         public delegate void SDL_QuitSubSystem(SDL_InitFlags flags);
 
-        public delegate SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
-
-        public delegate IntPtr SDL_GetHint(string name);
+        public delegate IntPtr SDL_RWFromFile(string file, string mode);
 
         public delegate int SDL_SetHint(string name, string value);
 
-        public delegate IntPtr SDL_RWFromFile(string file, string mode);
+        public delegate SDL_InitFlags SDL_WasInit(SDL_InitFlags flags);
 
         public static readonly SDL_Init Init = Util.LoadFunction<SDL_Init>(NativeLibrary, nameof(SDL_Init));
 
@@ -65,12 +65,13 @@ namespace SDL2Net.Internal
 
         public static readonly SDL_SetHint SetHint = Util.LoadFunction<SDL_SetHint>(NativeLibrary, nameof(SDL_SetHint));
 
-        public static readonly SDL_RWFromFile RwFromFile = Util.LoadFunction<SDL_RWFromFile>(NativeLibrary, nameof(SDL_RWFromFile));
+        public static readonly SDL_RWFromFile RwFromFile =
+            Util.LoadFunction<SDL_RWFromFile>(NativeLibrary, nameof(SDL_RWFromFile));
 
         internal static IntPtr NativeLibrary => Util.CurrentPlatform switch
         {
             Platform.Windows => Util.LoadLibrary("SDL2.dll"),
-            Platform.MacOS => Util.LoadLibrary("/usr/local/Cellar/sdl2/2.0.12_1/lib/libSDL2-2.0.0.dylib"),
+            Platform.MacOS => Util.LoadLibrary("/usr/local/Cellar/sdl2/2.0.14_1/lib/libSDL2-2.0.0.dylib"),
             _ => throw new NotImplementedException("Haven't determined how to locate SDL on this platform")
         };
     }

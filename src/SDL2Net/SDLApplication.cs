@@ -18,7 +18,6 @@ namespace SDL2Net
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
         private readonly Subject<Event> _subject = new Subject<Event>();
-        private SDL_Event _event;
         private bool _running = true;
 
         /// <summary>
@@ -101,8 +100,9 @@ namespace SDL2Net
 
         private void HandleEvent()
         {
-            while (SDL.PollEvent(ref _event) != 0)
-                switch (_event.type)
+            var ev = new SDL_Event();
+            while (SDL.PollEvent(ref ev) != 0)
+                switch (ev.type)
                 {
                     case SDL_EventType.SDL_QUIT:
                         Quit();
@@ -110,77 +110,77 @@ namespace SDL2Net
                     case SDL_EventType.SDL_KEYDOWN:
                         _subject.OnNext(new KeyPressEvent
                         {
-                            Key = _event.key.keysym.scancode,
-                            IsRepeat = _event.key.repeat == 1,
+                            Key = ev.key.keysym.scancode,
+                            IsRepeat = ev.key.repeat == 1,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_KEYUP:
                         _subject.OnNext(new KeyPressEvent
                         {
-                            Key = _event.key.keysym.scancode,
-                            IsRepeat = _event.key.repeat == 1,
+                            Key = ev.key.keysym.scancode,
+                            IsRepeat = ev.key.repeat == 1,
                             ButtonState = ButtonState.Released
                         });
                         break;
                     case SDL_EventType.SDL_MOUSEMOTION:
                         _subject.OnNext(new MouseMoveEvent
                         {
-                            X = _event.motion.x,
-                            Y = _event.motion.y,
-                            RelativeX = _event.motion.xrel,
-                            RelativeY = _event.motion.yrel
+                            X = ev.motion.x,
+                            Y = ev.motion.y,
+                            RelativeX = ev.motion.xrel,
+                            RelativeY = ev.motion.yrel
                         });
                         break;
                     case SDL_EventType.SDL_MOUSEBUTTONUP:
                         _subject.OnNext(new MouseButtonEvent
                         {
-                            Button = (MouseButton) _event.button.button,
+                            Button = (MouseButton) ev.button.button,
                             ButtonState = ButtonState.Released,
-                            Clicks = _event.button.clicks,
-                            X = _event.button.x,
-                            Y = _event.button.y
+                            Clicks = ev.button.clicks,
+                            X = ev.button.x,
+                            Y = ev.button.y
                         });
                         break;
                     case SDL_EventType.SDL_MOUSEBUTTONDOWN:
                         _subject.OnNext(new MouseButtonEvent
                         {
-                            Button = (MouseButton) _event.button.button,
+                            Button = (MouseButton) ev.button.button,
                             ButtonState = ButtonState.Pressed,
-                            Clicks = _event.button.clicks,
-                            X = _event.button.x,
-                            Y = _event.button.y
+                            Clicks = ev.button.clicks,
+                            X = ev.button.x,
+                            Y = ev.button.y
                         });
                         break;
                     case SDL_EventType.SDL_MOUSEWHEEL:
                         _subject.OnNext(new MouseWheelEvent
                         {
-                            X = _event.wheel.x,
-                            Y = _event.wheel.y,
-                            Direction = _event.wheel.direction == 1
+                            X = ev.wheel.x,
+                            Y = ev.wheel.y,
+                            Direction = ev.wheel.direction == 1
                                 ? MouseWheelDirection.Flipped
                                 : MouseWheelDirection.Normal
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
-                        _subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
+                        _subject.OnNext(new GamePadButtonEvent(ev.cbutton.which)
                         {
-                            Button = _event.cbutton.button,
+                            Button = ev.cbutton.button,
                             ButtonState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERBUTTONUP:
-                        _subject.OnNext(new GamePadButtonEvent(_event.cbutton.which)
+                        _subject.OnNext(new GamePadButtonEvent(ev.cbutton.which)
                         {
-                            Button = _event.cbutton.button,
+                            Button = ev.cbutton.button,
                             ButtonState = ButtonState.Released
                         });
                         break;
                     case SDL_EventType.SDL_CONTROLLERDEVICEADDED:
-                        _subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which, GamePadConnection.Connected));
+                        _subject.OnNext(new GamePadConnectionEvent(ev.cdevice.which, GamePadConnection.Connected));
                         break;
                     case SDL_EventType.SDL_CONTROLLERDEVICEREMOVED:
-                        _subject.OnNext(new GamePadConnectionEvent(_event.cdevice.which,
+                        _subject.OnNext(new GamePadConnectionEvent(ev.cdevice.which,
                             GamePadConnection.Disconnected));
                         break;
                 }

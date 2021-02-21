@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using SDL2Net.Internal;
+using SDL2Net.Utilities;
 using static SDL2Net.Internal.SDL_RendererFlags;
 using static SDL2Net.Utilities.Util;
 
@@ -31,6 +32,8 @@ namespace SDL2Net.Video
         private const string HintRenderScaleQuality = "SDL_RENDER_SCALE_QUALITY";
 
         internal readonly IntPtr RendererPtr;
+
+        private ScaleQuality _scaleQuality;
 
         /// <summary>
         ///     Creates a new hardware-accelerated 2D renderer.
@@ -68,8 +71,6 @@ namespace SDL2Net.Video
                 _scaleQuality = value;
             }
         }
-
-        private ScaleQuality _scaleQuality;
 
         /// <summary>
         ///     Clears the display area and fills with the color of <see cref="DrawColor" />.
@@ -121,28 +122,23 @@ namespace SDL2Net.Video
 
         public void CopyTexture(Texture texture, Rectangle? dest = null, Rectangle? source = null)
         {
-            var result = SDL.RenderCopy(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
-                GetRectOrDefault(texture, dest));
+            using var srcPtr = new StructPtr<SDL_Rect>(source?.ToSdlRect());
+            using var destPtr = new StructPtr<SDL_Rect>(dest?.ToSdlRect());
+
+            var result = SDL.RenderCopy(RendererPtr, texture.TexturePtr, (IntPtr) srcPtr, (IntPtr) destPtr);
             if (result != 0) throw new SDLException();
         }
 
         public void CopyTexture(Texture texture, Rectangle? dest, Rectangle? source, double angle, Point? origin,
             RenderFlip flip)
         {
-            var result = SDL.RenderCopyEx(RendererPtr, texture.TexturePtr, GetRectOrDefault(texture, source),
-                GetRectOrDefault(texture, dest),
-                angle, GetPointOrDefault(texture, origin), flip);
+            using var srcPtr = new StructPtr<SDL_Rect>(source?.ToSdlRect());
+            using var destPtr = new StructPtr<SDL_Rect>(dest?.ToSdlRect());
+            using var originPtr = new StructPtr<SDL_Point>(origin?.ToSdlPoint());
+
+            var result = SDL.RenderCopyEx(RendererPtr, texture.TexturePtr, (IntPtr) srcPtr, (IntPtr) destPtr,
+                angle, (IntPtr) originPtr, flip);
             if (result != 0) throw new SDLException();
-        }
-
-        private static SDL_Rect GetRectOrDefault(Texture texture, Rectangle? rectangle)
-        {
-            return rectangle?.ToSdlRect() ?? new SDL_Rect { x = 0, y = 0, w = texture.Width, h = texture.Height };
-        }
-
-        private static SDL_Point GetPointOrDefault(Texture texture, Point? point)
-        {
-            return point?.ToSdlPoint() ?? new SDL_Point { x = texture.Width / 2, y = texture.Height / 2 };
         }
 
         #region IDisposable Support

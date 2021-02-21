@@ -39,10 +39,12 @@ namespace SDL2Net.Internal
 
         public delegate int SDL_RenderClear(IntPtr renderer);
 
-        public delegate int SDL_RenderCopy(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest);
+        public delegate int SDL_RenderCopy(IntPtr renderer, IntPtr texture, [In] IntPtr sourceRect,
+            [In] IntPtr destRect);
 
-        public delegate int SDL_RenderCopyEx(IntPtr renderer, IntPtr texture, [In] SDL_Rect source, [In] SDL_Rect dest,
-            double angle, [In] SDL_Point center, RenderFlip flip);
+        public delegate int SDL_RenderCopyEx(IntPtr renderer, IntPtr texture, [In] IntPtr sourceRect,
+            [In] IntPtr destRect,
+            double angle, [In] IntPtr centerPoint, RenderFlip flip);
 
         public delegate int SDL_RenderDrawLine(IntPtr renderer, int x1, int y1, int x2, int y2);
 

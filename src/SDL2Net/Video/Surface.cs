@@ -17,12 +17,9 @@ namespace SDL2Net.Video
             Util.ThrowIfFailed(SurfacePtr);
         }
 
-        public Surface(string fileName)
+        private Surface(IntPtr surfacePtr)
         {
-            if (!File.Exists(fileName)) throw new FileNotFoundException("Bitmap file does not exist", fileName);
-
-            SurfacePtr = SDL.LoadBmpRw(SDL.RwFromFile(fileName, "rb"), 1);
-            Util.ThrowIfFailed(SurfacePtr);
+            SurfacePtr = surfacePtr;
         }
 
         public int Width => SdlSurface.w;
@@ -30,6 +27,16 @@ namespace SDL2Net.Video
         public int Height => SdlSurface.h;
 
         private SDL_Surface SdlSurface => Marshal.PtrToStructure<SDL_Surface>(SurfacePtr);
+
+        public static Surface CreateFromBitmapFile(string fileName)
+        {
+            if (!File.Exists(fileName)) throw new FileNotFoundException("Bitmap file does not exist", fileName);
+
+            var ptr = SDL.LoadBmpRw(SDL.RwFromFile(fileName, "rb"), 1);
+            Util.ThrowIfFailed(ptr);
+
+            return new Surface(ptr);
+        }
 
         #region IDisposable Support
 
