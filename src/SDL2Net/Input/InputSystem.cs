@@ -18,7 +18,7 @@ namespace SDL2Net.Input
         {
             _app = app;
 
-            var result = SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_EVENTS);
+            var result = SDL.InitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER);
             if (result != 0) throw new SDLException();
         }
 
@@ -31,6 +31,11 @@ namespace SDL2Net.Input
         ///     Mouse events.
         /// </summary>
         public IObservable<MouseEvent> Mouse => _app.OfType<MouseEvent>().AsObservable();
+
+        /// <summary>
+        ///     Events from all connected gamepads.
+        /// </summary>
+        public IObservable<GamePadEvent> GamePad => _app.OfType<GamePadEvent>().AsObservable();
 
         /// <summary>
         ///     Snapshot of the current keyboard state.
@@ -75,7 +80,7 @@ namespace SDL2Net.Input
         {
             Util.OutputDebugString("Disposing {0}: disposing = {1}", nameof(InputSystem), disposing);
             if (_disposed) return;
-            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_EVENTS);
+            SDL.QuitSubSystem(SDL_InitFlags.SDL_INIT_GAMECONTROLLER);
             _disposed = true;
         }
 

@@ -11,6 +11,7 @@ namespace SDL2Net.Input
     /// <summary>
     ///     SDL GameController subsystem. https://wiki.libsdl.org/CategoryGameController
     /// </summary>
+    [Obsolete]
     public class GamePadSystem : IDisposable
     {
         private readonly SDLApplication _app;

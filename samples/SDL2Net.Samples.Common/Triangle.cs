@@ -17,7 +17,7 @@ namespace SDL2Net.Samples.Common
         {
             _inputSystem = inputSystem;
             _inputSystem.Keyboard
-                .Where(e => e.ButtonState == ButtonState.Pressed && !e.IsRepeat)
+                .Where(e => e.KeyState == ButtonState.Pressed && !e.IsRepeat)
                 .Subscribe(e =>
                 {
                     Color = e.Key switch

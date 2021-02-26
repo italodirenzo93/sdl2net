@@ -112,7 +112,7 @@ namespace SDL2Net
                         {
                             Key = ev.key.keysym.scancode,
                             IsRepeat = ev.key.repeat == 1,
-                            ButtonState = ButtonState.Pressed
+                            KeyState = ButtonState.Pressed
                         });
                         break;
                     case SDL_EventType.SDL_KEYUP:
@@ -120,7 +120,7 @@ namespace SDL2Net
                         {
                             Key = ev.key.keysym.scancode,
                             IsRepeat = ev.key.repeat == 1,
-                            ButtonState = ButtonState.Released
+                            KeyState = ButtonState.Released
                         });
                         break;
                     case SDL_EventType.SDL_MOUSEMOTION:

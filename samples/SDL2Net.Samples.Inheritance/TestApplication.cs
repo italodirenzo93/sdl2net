@@ -38,7 +38,7 @@ namespace SDL2Net.Samples.Inheritance
         private void Initialize()
         {
             _inputSystem.Keyboard.OfType<KeyPressEvent>()
-                .Where(e => !e.IsRepeat && e.ButtonState == ButtonState.Pressed)
+                .Where(e => !e.IsRepeat && e.KeyState == ButtonState.Pressed)
                 .Subscribe(e =>
                 {
                     if (e.Key == Key.Escape) Quit();

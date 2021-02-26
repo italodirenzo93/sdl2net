@@ -6,6 +6,6 @@ namespace SDL2Net.Input.Events
     {
         public Key Key { get; internal set; }
         public bool IsRepeat { get; internal set; }
-        public ButtonState ButtonState { get; internal set; }
+        public ButtonState KeyState { get; internal set; }
     }
 }
